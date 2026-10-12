@@ -361,7 +361,17 @@
         if (field.required) field.setCustomValidity(String(field.value || '').trim() ? '' : 'Міндетті өрісті толтырыңыз.');
       });
       var invalid = fields.find(function (field) { return !field.checkValidity(); });
-      if (invalid) { if (report !== false) invalid.reportValidity(); return false; }
+      if (invalid) {
+        if (report !== false) {
+          var ancestor = invalid.parentElement;
+          while (ancestor && ancestor !== elements.treeForm) {
+            if (ancestor.tagName === 'DETAILS') ancestor.open = true;
+            ancestor = ancestor.parentElement;
+          }
+          invalid.reportValidity();
+        }
+        return false;
+      }
       return true;
     }
 
@@ -496,7 +506,7 @@
       elements.qrTargetLink.textContent = url;
       state.qrDownload = { url: url, forestId: forestId };
       elements.qrResult.hidden = false;
-      elements.qrStatus.textContent = forestId ? forestId + ' жарияланған. QR-код дайын.' : 'Сайттың QR-коды дайын. PNG немесе SVG форматында жүктеңіз.';
+      elements.qrStatus.textContent = forestId ? forestId + ' · QR дайын.' : 'QR дайын.';
     }
 
     function publicSiteUrl() {
@@ -635,14 +645,12 @@
           if (hasExternalRuntime) state.config.appUrl = externalRuntime().siteUrl;
           state.connected = state.mode === 'production';
           state.records = (data.records || []).map(withPassportUrl);
-          renderStats(data.stats || calculateStats(state.records));
           renderCatalog(state.records);
           applyConfig();
           readRoute(applyRoute);
         })
         .catch(function (error) {
           state.records = [];
-          renderStats(calculateStats([]));
           elements.catalogEmpty.hidden = true;
           elements.catalogCount.textContent = 'Деректерді жүктеу мүмкін болмады';
           elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
@@ -668,23 +676,10 @@
       var isDemo = state.mode === 'preview';
       document.getElementById('demo-banner').hidden = !isDemo;
       if (isDemo) {
-        document.getElementById('catalog-kicker').textContent = 'Демо жазбалар';
-        document.getElementById('catalog-description').textContent = 'Бұл оқу үлгілері интерфейсті тексеруге арналған. Атаулар, өлшемдер және зерттеушілер — демонстрациялық деректер.';
+        document.getElementById('catalog-description').textContent = 'Оқу үлгілері. Нақты зерттеулер емес.';
         document.getElementById('catalog-key').textContent = 'Оқу үлгісі';
-        document.getElementById('stat-published-label').textContent = 'Демо паспорт';
-        document.getElementById('stat-species-label').textContent = 'Үлгідегі түр';
-        document.getElementById('stat-groups-label').textContent = 'Үлгідегі топ';
-        document.querySelector('.stats-note').textContent = 'Көрсеткіштер тек демонстрациялық жазбалардан есептелген';
         document.getElementById('success-kicker').textContent = 'Демо жазба браузерде сақталды';
       }
-    }
-
-    function renderStats(stats) {
-      animateNumber(document.getElementById('stat-published'), Number(stats.published || 0));
-      animateNumber(document.getElementById('stat-species'), Number(stats.species || 0));
-      animateNumber(document.getElementById('stat-groups'), Number(stats.groups || 0));
-      var first = state.records[0];
-      if (first) document.getElementById('hero-id').textContent = first.forestId.replace('FOREST-', '');
     }
 
     function renderCatalog(records) {
@@ -693,7 +688,7 @@
       if (!records.length) {
         elements.catalogEmptyMessage.textContent = state.records.length
           ? 'Іздеу сұрауын немесе сүзгіні өзгертіп көріңіз.'
-          : 'Жарияланған паспорттар әлі жоқ. Жазбалар оқытушы тексергеннен кейін осында пайда болады.';
+          : 'Паспорттар оқытушы жариялағаннан кейін пайда болады.';
       }
       elements.catalogGrid.innerHTML = records.map(renderTreeCard).join('');
       mountPublishedPhotos(elements.catalogGrid);
@@ -717,8 +712,6 @@
             '<dl class="tree-meta">',
               metaItem('Құрылым', record.generativeStructure),
               metaItem('Орналасуы', record.location),
-              metaItem('Биіктігі', valueWithUnit(record.heightM, 'м')),
-              metaItem('Бақылау күні', formatHumanDate(record.studyDate)),
             '</dl>',
             '<button class="card-open" type="button" data-tree-id="', escapeAttribute(record.forestId), '">Паспортты ашу <span aria-hidden="true">→</span></button>',
           '</div>',
@@ -988,20 +981,19 @@
               passportItem('Фенологиялық күйі', record.phenology),
             '</dl>',
             '<div class="passport-prose">',
-              '<section><h4>Генеративтік мүшенің пішіні мен түсі</h4><p>', escapeHtml(record.organShapeColor || '—'), '</p></section>',
-              '<section><h4>Тұқым саны мен ерекшеліктері</h4><p>', escapeHtml(record.seedDetails || '—'), '</p></section>',
+              record.organShapeColor ? '<section><h4>Генеративтік мүшенің пішіні мен түсі</h4><p>' + escapeHtml(record.organShapeColor) + '</p></section>' : '',
+              record.seedDetails ? '<section><h4>Тұқым саны мен ерекшеліктері</h4><p>' + escapeHtml(record.seedDetails) + '</p></section>' : '',
               '<section><h4>Морфологиялық сипаттама</h4><p>', escapeHtml(record.morphology || '—'), '</p></section>',
-              '<section><h4>Қорытынды және диагностикалық белгілер</h4><p>', escapeHtml(record.conclusion || '—'), '</p></section>',
+              record.conclusion ? '<section><h4>Қорытынды және диагностикалық белгілер</h4><p>' + escapeHtml(record.conclusion) + '</p></section>' : '',
               organPhoto,
             '</div>',
           '</div>',
           '<aside class="passport-side">',
             '<h3>QR-код</h3>',
-            '<div class="qr-box">', qr, passportUrl ? '<a href="' + escapeAttribute(passportUrl) + '" target="_blank" rel="noopener">' + escapeHtml(passportUrl) + '</a>' : '', '</div>',
+            '<div class="qr-box">', qr, passportUrl ? '<a href="' + escapeAttribute(passportUrl) + '" target="_blank" rel="noopener">Паспорт сілтемесі ↗</a>' : '', '</div>',
             '<div class="research-stamp">',
               '<p>Зерттеуші<strong>', escapeHtml(record.researcher || '—'), '</strong></p>',
-              '<p>Академиялық топ<strong>', escapeHtml(record.academicGroup || '—'), '</strong></p>',
-              '<p>Күйі<strong>', isDemo ? 'Демо үлгі — оқытушы тексермеген' : 'Оқытушы тексерген', '</strong></p>',
+              record.academicGroup ? '<p>Академиялық топ<strong>' + escapeHtml(record.academicGroup) + '</strong></p>' : '',
             '</div>',
             '<div class="passport-actions">',
               passportUrl ? '<button class="button button-dark" type="button" data-copy-url="' + escapeAttribute(passportUrl) + '">Сілтемені көшіру</button>' : '',
@@ -1014,7 +1006,8 @@
     }
 
     function passportItem(label, value) {
-      return '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value || '—') + '</dd></div>';
+      if (value === undefined || value === null || value === '' || value === '—') return '';
+      return '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>';
     }
 
     function renderQr(url, forestId) {
@@ -1342,22 +1335,6 @@
         species: new Set(records.map(function (r) { return String(r.scientificName || '').toLocaleLowerCase(); }).filter(Boolean)).size,
         groups: new Set(records.map(function (r) { return String(r.academicGroup || '').toLocaleLowerCase(); }).filter(Boolean)).size
       };
-    }
-
-    function animateNumber(element, target) {
-      if (!element) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        element.textContent = String(target);
-        return;
-      }
-      var started = performance.now();
-      var duration = 650;
-      function frame(now) {
-        var progress = Math.min(1, (now - started) / duration);
-        element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
-        if (progress < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
     }
 
     function showToast(message) {

@@ -461,12 +461,11 @@
     .footer-bottom { flex-direction: column; gap: 8px; }
   }
 
-  /* Distinct pages share a restrained glass surface system. */
+  /* Quiet surfaces keep each page focused on its main action. */
   body {
     overflow-x: hidden;
     background: #eaf1e9;
-    background-image: radial-gradient(circle at 6% 13%, rgba(182, 220, 190, .55), transparent 31%),
-      radial-gradient(circle at 90% 65%, rgba(209, 227, 215, .7), transparent 35%);
+    background-image: radial-gradient(circle at 6% 13%, rgba(182, 220, 190, .32), transparent 45%);
   }
   .site-header {
     background: rgba(248, 252, 247, .74);
@@ -487,87 +486,71 @@
   .main-nav .nav-cta::after { display: none; }
   .mobile-dock { display: none; }
   .hero {
-    min-height: calc(100vh - 78px);
-    padding-top: clamp(74px, 9vw, 125px);
+    min-height: calc(100svh - 154px);
+    display: grid; align-items: center;
+    padding: 72px 0;
     background: radial-gradient(circle at 83% 19%, rgba(145, 211, 167, .29), transparent 26%),
       radial-gradient(circle at 14% 78%, rgba(73, 137, 104, .35), transparent 35%),
       linear-gradient(132deg, #09291f 0%, #164c36 63%, #276a49 100%);
   }
-  .hero::after { opacity: .25; }
-  .hero-lead { color: rgba(255,255,255,.82); }
+  .hero::after { display: none; }
+  .hero h1 { font-size: clamp(48px, 5.5vw, 72px); }
+  .hero-lead { max-width: 490px; margin-top: 22px; color: rgba(255,255,255,.76); font-size: 17px; }
+  .hero-actions { gap: 12px; margin-top: 30px; }
   .button-primary { color: var(--forest-950); background: rgba(255,255,255,.95); }
   .button-ghost { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.3); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-  .hero-assurance { margin: 30px 0 0; color: rgba(255,255,255,.73); font-size: 12px; }
-  .hero-assurance span { margin-right: 7px; color: #aee1af; }
-  .tree-rings { filter: drop-shadow(0 20px 45px rgba(0,0,0,.13)); }
-  .specimen-tag {
-    transform: rotate(-3deg); color: var(--ink);
-    background: rgba(248, 253, 244, .83); border: 1px solid rgba(255,255,255,.74);
-    border-radius: 18px; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-  }
-  .specimen-tag::before { display: none; }
-  .stats-row { border-color: rgba(255,255,255,.2); }
-  .process-section, .catalog-section, .qr-generator-section, .register-section, .passport-section {
-    min-height: calc(100vh - 78px);
+  .hero-visual { height: 390px; opacity: .75; }
+  .tree-rings { width: min(350px, 100%); }
+  .catalog-section, .qr-generator-section, .register-section, .passport-section {
+    min-height: calc(100svh - 154px);
     background: transparent;
   }
-  .process-section { padding-top: 100px; }
-  .process-grid { gap: 16px; border: 0; background: none; }
-  .process-grid li {
-    min-height: 260px; border: 1px solid rgba(255,255,255,.82);
-    border-radius: 22px; background: rgba(255,255,255,.57);
-    box-shadow: 0 14px 35px rgba(18,61,46,.05);
-    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-  }
-  .process-grid li::after { display: none; }
-  .catalog-section, .qr-generator-section, .register-section { padding-top: 90px; }
+  .catalog-section, .qr-generator-section, .register-section { padding: 48px 0 64px; }
+  .section-heading h2, .register-intro h2 { font-size: clamp(32px, 3.7vw, 44px); }
+  .section-heading.split { display: block; }
+  .section-heading.split > p { max-width: 560px; margin: 12px 0 0; font-size: 14px; }
+  .catalog-tools { margin-top: 28px; }
   .catalog-tools input, .catalog-tools select, .qr-generator-card, .tree-card,
-  .form-card, .register-intro, .required-guide, .empty-state, .passport {
+  .form-card, .empty-state, .passport {
     border: 1px solid rgba(255,255,255,.82);
     background: rgba(255,255,255,.7);
-    box-shadow: 0 18px 45px rgba(18,61,46,.075), inset 0 1px 0 rgba(255,255,255,.85);
+    box-shadow: 0 8px 28px rgba(18,61,46,.045);
     -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
   }
   .catalog-tools input, .catalog-tools select { background: rgba(255,255,255,.74); }
-  .tree-card { border-radius: 22px; }
-  .empty-state { padding: 80px 28px; }
+  .tree-card { border-radius: 18px; }
+  .empty-state { padding: 52px 24px; }
+  .empty-state > span { font-size: 40px; }
+  .empty-state p { max-width: 460px; margin-inline: auto; font-size: 14px; }
   .qr-generator-section { border-top: 0; }
-  .qr-generator-card { border-radius: 28px; }
+  .qr-generator-grid { width: min(620px, calc(100% - 40px)); grid-template-columns: 1fr; gap: 24px; }
+  .qr-intro { margin-top: 12px; font-size: 14px; }
+  .qr-generator-card { padding: 26px; border-radius: 22px; }
   .register-section { color: var(--ink); }
-  .register-grid { grid-template-columns: minmax(290px, .7fr) minmax(0, 1.3fr); gap: 30px; }
+  .register-grid { width: min(760px, calc(100% - 40px)); grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .register-intro {
-    top: 105px; padding: clamp(24px, 3vw, 38px); border-radius: 28px;
+    position: static; max-width: none; padding: 0;
   }
-  .register-intro h2 { color: var(--forest-950); font-size: clamp(40px, 4.4vw, 58px); }
-  .register-intro > p:not(.eyebrow) { color: #4f665a; font-size: 14px; }
-  .required-guide {
-    margin-top: 28px; padding: 17px 18px; border-color: rgba(129,178,138,.36);
-    border-radius: 16px; background: rgba(225, 242, 224, .7);
-    box-shadow: none;
-  }
-  .required-guide strong { display: block; color: var(--forest-800); font-size: 13px; }
-  .required-guide strong span { color: var(--forest-600); margin-right: 5px; }
-  .required-guide p { margin: 7px 0 0; color: #405d4e; font-size: 12px; line-height: 1.7; }
-  .register-principles { margin-top: 28px; }
-  .register-principles > div { border-top-color: var(--line); }
-  .register-principles p { color: #5b6d62; }
-  .register-principles strong { color: var(--forest-900); }
-  .form-card { border-radius: 28px; }
-  .form-progress { height: 5px; background: rgba(161,204,167,.3); }
+  .register-intro h2 { color: var(--forest-950); }
+  .register-intro > p:not(.eyebrow) { margin: 10px 0 0; color: #5c7064; font-size: 14px; }
+  .form-card { border-radius: 22px; }
+  #tree-form { padding: 26px 30px 28px; }
+  .form-progress { height: 3px; border-radius: 4px; background: rgba(161,204,167,.24); }
   .form-progress span { background: linear-gradient(90deg, #3c8e62, #9dc98c); }
-  .form-stepper { display: flex; align-items: stretch; gap: 8px; margin-top: 24px; }
+  .form-stepper { display: flex; align-items: stretch; gap: 8px; margin-top: 16px; }
   .form-step-dot {
     min-width: 0; flex: 1; display: flex; align-items: center; gap: 9px;
-    padding: 9px 10px; border: 1px solid var(--line); border-radius: 12px;
-    color: #73867a; background: rgba(231,239,230,.55); font-size: 10px;
+    padding: 7px 0; color: #73867a; font-size: 11px;
   }
-  .form-step-dot span { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 25px; border-radius: 50%; background: rgba(255,255,255,.9); font-size: 9px; font-weight: 850; }
-  .form-step-dot strong { font-weight: 750; line-height: 1.25; }
-  .form-step-dot.is-active { color: var(--forest-900); border-color: rgba(51,123,77,.38); background: #e2f0e2; }
+  .form-step-dot span { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 25px; border-radius: 50%; background: #e4ede4; font-size: 10px; font-weight: 750; }
+  .form-step-dot strong { font-weight: 650; line-height: 1.25; }
+  .form-step-dot.is-active { color: var(--forest-900); }
   .form-step-dot.is-active span, .form-step-dot.is-complete span { color: #fff; background: var(--forest-700); }
-  .required-progress { margin: 17px 0 0; color: var(--forest-700); font-size: 12px; font-weight: 750; }
+  .required-progress { margin: 10px 0 0; color: #65776b; font-size: 11px; font-weight: 500; }
   .step-help { margin: -8px 0 22px; color: #66776d; font-size: 12px; }
-  .form-navigation { grid-column: 2; display: flex; gap: 12px; justify-content: flex-end; margin-top: -12px; }
+  fieldset { margin-top: 26px; }
+  legend { margin-bottom: 20px; }
+  .form-navigation { grid-column: 1; display: flex; gap: 12px; justify-content: flex-end; margin: 0; }
   .form-navigation .button { margin: 0; min-height: 54px; border-radius: 12px; }
   .button-step-back { color: var(--forest-800); border-color: rgba(18,61,46,.2); background: rgba(255,255,255,.65); }
   .button-step-next { flex: 1; color: #fff; background: var(--forest-900); }
@@ -576,15 +559,33 @@
   .field input, .field select, .field textarea { background: rgba(255,255,255,.85); }
   .field input, .field select { min-height: 52px; }
   .field textarea { min-height: 126px; }
-  .photo-upload { background: rgba(233,244,233,.66); }
+  .optional-fields { margin-top: 20px; border-top: 1px solid var(--line); }
+  .optional-fields > summary, .photo-details > summary, .site-info > summary {
+    min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    color: var(--forest-700); font-size: 12px; font-weight: 650; cursor: pointer; list-style: none;
+  }
+  .optional-fields > summary::-webkit-details-marker, .photo-details > summary::-webkit-details-marker, .site-info > summary::-webkit-details-marker { display: none; }
+  .optional-fields > summary::after, .photo-details > summary::after, .site-info > summary::after { content: "+"; font-size: 19px; font-weight: 400; }
+  .optional-fields[open] > summary::after, .photo-details[open] > summary::after, .site-info[open] > summary::after { content: "−"; }
+  .optional-fields-content { padding: 8px 0 4px; }
+  .optional-fields-content > .field:first-child { margin-top: 0; }
+  .photo-details { grid-column: 1 / -1; }
+  .photo-details > summary { justify-content: flex-start; font-size: 11px; font-weight: 500; }
+  .photo-details > p { margin: 0 0 8px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+  .photo-upload { padding: 16px; background: rgba(238,245,237,.5); }
   .passport { overflow: hidden; }
   .passport-body { background: rgba(255,255,255,.85); }
+  .site-footer { padding: 16px 0; border-top: 1px solid var(--line); color: var(--muted); background: transparent; }
+  .footer-minimal { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .footer-minimal > a { min-height: 44px; display: inline-flex; align-items: center; color: var(--forest-800); font-size: 11px; font-weight: 750; letter-spacing: .04em; text-decoration: none; }
+  .site-info { max-width: 390px; text-align: right; }
+  .site-info > summary { justify-content: flex-end; color: var(--muted); font-size: 11px; font-weight: 500; }
+  .site-info p { margin: 0 0 8px; font-size: 11px; }
+  .site-info #app-mode { display: block; font-size: 10px; }
 
-  @media (max-width: 1100px) {
-    .register-grid { grid-template-columns: 1fr; gap: 24px; }
-    .register-intro { position: static; max-width: none; }
-    .register-principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .form-navigation { grid-column: 1; }
+  @media (min-width: 721px) and (max-width: 980px) {
+    .hero-grid { grid-template-columns: 1fr .65fr; gap: 28px; }
+    .hero-visual { height: 300px; margin: 0; }
   }
 
   @media (max-width: 720px) {
@@ -592,66 +593,53 @@
     body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
     .site-header { position: sticky; }
     .header-inner { min-height: 64px; }
-    .main-nav { max-height: calc(100dvh - 140px); background: rgba(9,42,30,.97); }
+    .main-nav { gap: 0; max-height: calc(100dvh - 140px); background: rgba(9,42,30,.97); }
     .main-nav a[aria-current="page"] { color: #aee1af; }
     .main-nav .nav-cta { margin-top: 15px; justify-content: center; color: #fff; background: #39785a; }
-    .hero { min-height: calc(100dvh - 130px); padding-top: 55px; }
-    .hero-grid { gap: 2px; }
-    .hero h1 { font-size: clamp(45px, 12vw, 62px); }
-    .hero-lead { margin-top: 22px; }
+    .hero { min-height: calc(100svh - 205px - env(safe-area-inset-bottom)); padding: 50px 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: 0; }
+    .hero h1 { font-size: clamp(42px, 11vw, 56px); }
+    .hero-lead { max-width: 360px; margin-top: 20px; font-size: 15px; }
     .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
     .hero-actions .button { min-height: 48px; padding: 11px 16px; font-size: 12px; }
-    .hero-assurance { max-width: 310px; margin-top: 20px; line-height: 1.55; }
-    .hero-visual { height: 255px; margin: -8px 0 0; }
-    .tree-rings { width: 245px; }
-    .specimen-tag { right: 1%; bottom: 3%; width: 165px; padding: 12px 14px; }
-    .specimen-tag strong { font-size: 16px; }
-    .stats-row { margin-top: 28px; padding-bottom: 30px; }
-    .process-section, .catalog-section, .register-section, .qr-generator-section, .passport-section { min-height: calc(100dvh - 130px); padding: 38px 0 66px; }
-    .section-heading h2, .register-intro h2 { font-size: clamp(34px, 9vw, 45px); }
-    .process-grid { gap: 10px; margin-top: 30px; }
-    .process-grid li { min-height: 160px; padding: 20px; }
-    .process-grid strong { margin-top: 22px; }
-    .catalog-tools { gap: 10px; margin-top: 27px; }
+    .hero-visual { display: none; }
+    .catalog-section, .register-section, .qr-generator-section, .passport-section { min-height: calc(100svh - 205px); padding: 28px 0 36px; }
+    .section-heading h2, .register-intro h2 { font-size: 32px; }
+    .catalog-tools { gap: 10px; margin-top: 22px; }
     .catalog-meta { margin-top: 22px; }
     .tree-card { border-radius: 18px; }
-    .qr-generator-grid { gap: 24px; }
-    .qr-generator-card { padding: 20px; border-radius: 22px; }
-    .register-grid { gap: 16px; }
-    .register-intro { padding: 21px; border-radius: 22px; }
-    .register-intro > p:not(.eyebrow) { margin-top: 12px; }
-    .required-guide { margin-top: 18px; }
-    .register-principles { display: none; }
-    .form-card { border-radius: 22px; }
-    #tree-form { padding: 24px 18px 105px; scroll-margin-top: 78px; }
-    .form-head { padding-bottom: 18px; }
-    .form-head strong { font-size: 18px; }
-    .form-stepper { gap: 5px; margin-top: 19px; }
-    .form-step-dot { display: block; padding: 8px 5px; text-align: center; }
-    .form-step-dot span { margin: 0 auto 4px; }
-    .form-step-dot strong { display: block; font-size: 9px; }
-    fieldset { margin-top: 25px; }
+    .qr-generator-grid, .register-grid { width: var(--shell); gap: 18px; }
+    .qr-generator-card { padding: 20px; border-radius: 18px; }
+    .register-intro > p:not(.eyebrow) { margin-top: 8px; font-size: 13px; }
+    .form-card { border-radius: 18px; }
+    #tree-form { padding: 18px 16px 20px; scroll-margin-top: 78px; }
+    .form-stepper { gap: 6px; margin-top: 12px; }
+    .form-step-dot { gap: 6px; padding: 5px 0; }
+    .form-step-dot span { width: 22px; height: 22px; flex-basis: 22px; font-size: 9px; }
+    .form-step-dot strong { font-size: 9px; }
+    .required-progress { margin-top: 8px; font-size: 10px; }
+    fieldset { margin-top: 22px; }
     legend { margin-bottom: 16px; font-size: 18px; }
     .step-help { margin-bottom: 18px; }
     .field-grid { gap: 15px; }
     .field input, .field select { min-height: 54px; font-size: 16px; }
     .field textarea { font-size: 16px; }
-    .form-navigation { position: fixed; bottom: calc(72px + env(safe-area-inset-bottom)); left: 14px; right: 14px; z-index: 1050; margin: 0; padding: 8px; border: 1px solid rgba(255,255,255,.8); border-radius: 17px; background: rgba(244,250,244,.94); box-shadow: 0 10px 28px rgba(18,61,46,.14); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
-    body.nav-open .form-navigation { visibility: hidden; }
     .form-navigation .button { min-height: 52px; padding: 10px 13px; }
     .button-step-back { min-width: 88px; }
     .mobile-dock {
       position: fixed; z-index: 1100; right: 9px; bottom: calc(7px + env(safe-area-inset-bottom)); left: 9px;
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
       padding: 5px; border: 1px solid rgba(255,255,255,.82); border-radius: 21px;
-      background: rgba(244,251,244,.91); box-shadow: 0 10px 35px rgba(18,61,46,.2);
+      background: rgba(244,251,244,.94); box-shadow: 0 8px 24px rgba(18,61,46,.12);
       -webkit-backdrop-filter: blur(25px); backdrop-filter: blur(25px);
     }
     .mobile-dock a { min-height: 52px; display: grid; align-content: center; justify-items: center; gap: 0; border-radius: 16px; color: #526b59; text-decoration: none; }
     .mobile-dock a[aria-current="page"] { color: #fff; background: var(--forest-900); }
     .mobile-dock a span { height: 24px; font-size: 22px; line-height: 1; }
     .mobile-dock a small { font-size: 10px; font-weight: 750; }
-    .site-footer { padding-bottom: 28px; }
+    .site-footer { padding: 12px 0 20px; }
+    .footer-minimal { gap: 18px; }
+    .site-info { max-width: 240px; }
     .toast { right: 14px; bottom: calc(85px + env(safe-area-inset-bottom)); left: 14px; max-width: none; }
   }
 
@@ -693,7 +681,6 @@
           </span>
           <span>
             <strong>FOREST ID</strong>
-            <small>Ғылыми далалық зерттеу</small>
           </span>
         </a>
 
@@ -707,7 +694,6 @@
           <a href="#register" data-page-link="register">Студенттерге</a>
           <a href="#catalog" data-page-link="catalog">Паспорттар</a>
           <a href="#qr-generator" data-page-link="qr">QR-код</a>
-          <a class="nav-cta" href="#register">Зерттеуді бастау <span aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </header>
@@ -718,17 +704,15 @@
         <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
-            <p class="eyebrow">Даладағы зерттеуден цифрлық паспортқа</p>
             <h1 id="hero-title">Әр ағаштың<br><em>өз тарихы бар.</em></h1>
-            <p class="hero-lead">Өсімдікті зерттеңіз, нақты фото мен деректерді жіберіңіз. Оқытушы тексерген жазба ашық каталогта жеке паспортқа айналады.</p>
+            <p class="hero-lead">Ағаштар мен бұталардың цифрлық паспорттары.</p>
             <div class="hero-actions">
               <a class="button button-primary" href="#register">Зерттеуді бастау <span aria-hidden="true">→</span></a>
               <a class="button button-ghost" href="#catalog">Паспорттарды көру</a>
             </div>
-            <p class="hero-assurance"><span aria-hidden="true">✦</span> Студент енгізеді · Оқытушы тексереді · Каталог жариялайды</p>
           </div>
 
-          <div class="hero-visual reveal reveal-delay" aria-label="FOREST ID зерттеу үдерісі">
+          <div class="hero-visual reveal reveal-delay" aria-hidden="true">
             <div class="tree-rings" aria-hidden="true">
               <span class="ring ring-one"></span>
               <span class="ring ring-two"></span>
@@ -737,35 +721,7 @@
                 <svg viewBox="0 0 56 56"><path d="M28 7C17 15 11 23 11 33c0 9 7 16 17 16s17-7 17-16C45 23 39 15 28 7Z" fill="currentColor"/><path d="M28 17v28M28 27l-8 6M28 33l9 5" fill="none" stroke="#f7f4ec" stroke-width="2.6" stroke-linecap="round"/></svg>
               </span>
             </div>
-            <div class="specimen-tag">
-              <span class="specimen-label">FOREST ID</span>
-              <strong>FOREST—<span id="hero-id">00001</span></strong>
-              <span class="specimen-rule"></span>
-              <p>Бақылау • Тексеру • Жариялау</p>
-            </div>
           </div>
-        </div>
-
-        <div class="shell stats-row" aria-label="Жоба статистикасы">
-          <div><strong id="stat-published">0</strong><span id="stat-published-label">Жарияланған паспорт</span></div>
-          <div><strong id="stat-species">0</strong><span id="stat-species-label">Зерттелген түр</span></div>
-          <div><strong id="stat-groups">0</strong><span id="stat-groups-label">Зерттеуші топ</span></div>
-          <p class="stats-note"><span></span>Мәліметтер оқытушы тексергеннен кейін ғана жарияланады</p>
-        </div>
-      </section>
-
-      <section class="process-section" data-page="home" aria-labelledby="process-title">
-        <div class="shell">
-          <div class="section-heading compact reveal">
-            <p class="eyebrow">Зерттеу үдерісі</p>
-            <h2 id="process-title">Даладағы бақылаудан цифрлық паспортқа дейін</h2>
-          </div>
-          <ol class="process-grid">
-            <li class="reveal"><span>01</span><strong>Бақылау</strong><p>Өсімдікті далада зерттеп, өлшемдер мен белгілерді тіркеңіз.</p></li>
-            <li class="reveal"><span>02</span><strong>Енгізу</strong><p>Атауы, GPS, фото және морфологиялық сипаттаманы формаға енгізіңіз.</p></li>
-            <li class="reveal"><span>03</span><strong>Тексеру</strong><p>Оқытушы ғылыми атаулар мен өлшемдердің дұрыстығын растайды.</p></li>
-            <li class="reveal"><span>04</span><strong>Жариялау</strong><p>Жеке FOREST ID, ашық паспорт және оған апаратын QR-код жасалады.</p></li>
-          </ol>
         </div>
       </section>
 
@@ -773,17 +729,16 @@
         <div class="shell">
           <div class="section-heading split reveal">
             <div>
-              <p class="eyebrow" id="catalog-kicker">Ашық ғылыми қор</p>
-              <h2 id="catalog-title">Ағаштар мен бұталар паспорты</h2>
+              <h2 id="catalog-title">Паспорттар</h2>
             </div>
-            <p id="catalog-description">Әр карточка оқытушы тексерген ғылыми жазбаға апарады.</p>
+            <p id="catalog-description">Оқытушы тексерген зерттеулер.</p>
           </div>
 
           <form class="catalog-tools reveal" id="catalog-filter" role="search">
             <label class="search-field">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
               <span class="sr-only">Іздеу</span>
-              <input id="catalog-query" type="search" placeholder="Атауы немесе FOREST ID бойынша іздеу">
+              <input id="catalog-query" type="search" placeholder="Атауы немесе FOREST ID">
             </label>
             <label class="select-field">
               <span class="sr-only">Генеративтік құрылым</span>
@@ -807,7 +762,7 @@
           <div class="empty-state" id="catalog-empty" hidden>
             <span aria-hidden="true">⌁</span>
             <h3>Жазба табылмады</h3>
-            <p id="catalog-empty-message">Жарияланған паспорттар әлі жоқ. Жазбалар оқытушы тексергеннен кейін осында пайда болады.</p>
+            <p id="catalog-empty-message">Паспорттар оқытушы жариялағаннан кейін пайда болады.</p>
           </div>
         </div>
       </section>
@@ -815,10 +770,8 @@
       <section class="qr-generator-section" id="qr-generator" data-page="qr" aria-labelledby="qr-generator-title">
         <div class="shell qr-generator-grid">
           <div class="section-heading reveal">
-            <p class="eyebrow">Көрсету және бөлісу</p>
-            <h2 id="qr-generator-title">Сайтқа апаратын QR-код</h2>
-            <p class="qr-intro">Комиссияға көрсету, басып шығару немесе бөлісу үшін сайттың QR-кодын жүктеңіз. Жеке ағаш үшін оқытушы жариялаған паспортты таңдаңыз.</p>
-            <p class="qr-privacy-note">QR-код осы браузерде жасалады. Жарияланбаған зерттеулерге ашық QR берілмейді.</p>
+            <h2 id="qr-generator-title">QR-код</h2>
+            <p class="qr-intro">Сайттың немесе жарияланған паспорттың QR-кодын жүктеңіз.</p>
           </div>
           <div class="qr-generator-card reveal reveal-delay">
             <form id="qr-generator-form">
@@ -835,7 +788,7 @@
                 <button class="button button-dark" id="qr-download-png" type="button">PNG жүктеу</button>
                 <button class="button qr-download-svg" id="qr-download-svg" type="button">SVG жүктеу</button>
               </div>
-              <p class="qr-download-help">PNG — телефон мен презентацияға, SVG — сапасын жоғалтпай басып шығаруға. Қағазға шығармас бұрын QR-кодты телефоныңызбен тексеріңіз.</p>
+              <p class="qr-download-help">PNG — сурет, SVG — басып шығаруға.</p>
             </div>
           </div>
         </div>
@@ -853,27 +806,13 @@
       <section class="register-section" id="register" data-page="register" aria-labelledby="register-title">
         <div class="shell register-grid">
           <div class="register-intro reveal">
-            <p class="eyebrow">Студенттің жұмыс кеңістігі</p>
-            <h2 id="register-title">Зерттеуді<br>оңай жіберіңіз.</h2>
-            <p>Үш қадам, бес міндетті өріс. Қалған мәліметтер мен фотоларды зерттеуіңізге қарай қосыңыз.</p>
-            <div class="required-guide" role="note">
-              <strong><span aria-hidden="true">✳</span> Міндетті бес өріс</strong>
-              <p>Зерттеуші · Қазақша атауы · Ғылыми атауы · Генеративтік құрылым · Морфологиялық сипаттама</p>
-            </div>
-            <div class="register-principles">
-              <div><span>01</span><p><strong>Нақты өлшем</strong>Өлшеу бірліктерін тексеріңіз.</p></div>
-              <div><span>02</span><p><strong>Ғылыми атау</strong>Латынша атауды анықтағышпен салыстырыңыз.</p></div>
-              <div><span>03</span><p><strong>Фото — файл ретінде</strong>Ағаш пен генеративтік мүшені анық көрсетіңіз. Фото қосу міндетті емес.</p></div>
-            </div>
+            <h2 id="register-title">Жаңа зерттеу</h2>
+            <p><b>*</b> — міндетті өріс. Жазба оқытушыға тексеруге жіберіледі.</p>
           </div>
 
           <div class="form-card reveal reveal-delay">
             <form id="tree-form" novalidate>
               <div class="form-progress" aria-hidden="true"><span id="form-progress-bar"></span></div>
-              <div class="form-head">
-                <span class="step-badge">FOREST ID</span>
-                <p><strong>Жаңа зерттеу</strong><span><b>*</b> міндетті өріс</span></p>
-              </div>
 
               <div class="form-stepper" aria-label="Форманы толтыру кезеңдері">
                 <div class="form-step-dot" data-step-dot="0"><span>01</span><strong>Өсімдік</strong></div>
@@ -884,22 +823,29 @@
 
               <fieldset data-form-step="0">
                 <legend><span>1</span>Зерттеуші және өсімдік</legend>
-                <p class="step-help">Алдымен өз атыңызды және зерттеген өсімдіктің атауларын жазыңыз.</p>
                 <div class="field-grid two">
                   <label class="field"><span>Зерттеуші(лер) <b>*</b></span><input name="researcher" required maxlength="160" autocomplete="name" placeholder="Аты-жөні"></label>
                   <label class="field"><span>Академиялық топ</span><input name="academicGroup" maxlength="80" placeholder="Мысалы: БИО-101"></label>
                   <label class="field"><span>Қазақша атауы <b>*</b></span><input name="kzName" required maxlength="120" placeholder="Мысалы: Ақ қайың"></label>
                   <label class="field"><span>Ғылыми атауы <b>*</b></span><input name="scientificName" required maxlength="180" placeholder="Betula pendula Roth" autocapitalize="off" spellcheck="false"></label>
-                  <label class="field"><span>Тұқымдасы</span><input name="family" maxlength="120" placeholder="Betulaceae"></label>
-                  <label class="field"><span>Өсімдік тобы</span><select name="plantGroup"><option value="">Таңдаңыз</option><option>Ағаш</option><option>Бұта</option><option>Басқа</option></select></label>
                 </div>
+                <details class="optional-fields">
+                  <summary>Қосымша мәліметтер</summary>
+                  <div class="optional-fields-content field-grid two">
+                    <label class="field"><span>Тұқымдасы</span><input name="family" maxlength="120" placeholder="Betulaceae"></label>
+                    <label class="field"><span>Өсімдік тобы</span><select name="plantGroup"><option value="">Таңдаңыз</option><option>Ағаш</option><option>Бұта</option><option>Басқа</option></select></label>
+                  </div>
+                </details>
               </fieldset>
 
               <fieldset data-form-step="1">
                 <legend><span>2</span>Морфологиялық бақылау</legend>
-                <p class="step-help">Құрылымды таңдаңыз және өзіңіз байқаған белгілерді сипаттаңыз. Өлшемдер бар болса қосыңыз.</p>
-                <div class="field-grid two">
-                  <label class="field"><span>Генеративтік құрылым <b>*</b></span><select name="generativeStructure" required><option value="">Таңдаңыз</option><option>Гүл</option><option>Жеміс</option><option>Тұқым</option><option>Бүр</option><option>Бірнеше құрылым</option></select></label>
+                <label class="field"><span>Генеративтік құрылым <b>*</b></span><select name="generativeStructure" required><option value="">Таңдаңыз</option><option>Гүл</option><option>Жеміс</option><option>Тұқым</option><option>Бүр</option><option>Бірнеше құрылым</option></select></label>
+                <label class="field full"><span>Морфологиялық сипаттама <b>*</b></span><textarea name="morphology" required maxlength="3000" rows="5" placeholder="Гүл, жеміс, тұқым немесе бүрдің байқалған белгілері"></textarea></label>
+                <details class="optional-fields">
+                  <summary>Өлшемдер және қосымша мәліметтер</summary>
+                  <div class="optional-fields-content">
+                    <div class="field-grid two">
                   <label class="field"><span>Таралу тәсілі</span><select name="dispersal"><option value="">Таңдаңыз</option><option>Жел</option><option>Жануар</option><option>Су</option><option>Басқа</option><option>Анықталмаған</option></select></label>
                   <label class="field"><span>Ағаштың ені, мм</span><input name="treeWidthMm" type="number" min="0" max="100000" step="0.1" inputmode="decimal" placeholder="0"></label>
                   <label class="field"><span>Ағаш биіктігі, м</span><input name="heightM" type="number" min="0" max="150" step="0.01" inputmode="decimal" placeholder="0.00"></label>
@@ -912,37 +858,45 @@
                 </div>
                 <label class="field full"><span>Генеративтік мүшенің пішіні мен түсі</span><textarea name="organShapeColor" maxlength="1000" rows="3" placeholder="Бақыланған пішіні мен түсін сипаттаңыз"></textarea></label>
                 <label class="field full"><span>Тұқым саны мен ерекшеліктері</span><textarea name="seedDetails" maxlength="1000" rows="3" placeholder="Тұқымның саны, пішіні, түсі және басқа белгілері"></textarea></label>
-                <label class="field full"><span>Генеративтік мүшенің морфологиялық сипаттамасы <b>*</b></span><textarea name="morphology" required maxlength="3000" rows="5" placeholder="Бақылаудың толық сипаттамасы және диагностикалық белгілері"></textarea></label>
                 <label class="field full"><span>Ғылыми қорытынды</span><textarea name="conclusion" maxlength="2000" rows="4" placeholder="Түрді анықтауға мүмкіндік берген негізгі белгілер"></textarea></label>
+                  </div>
+                </details>
               </fieldset>
 
               <fieldset data-form-step="2">
-                <legend><span>3</span>Орналасуы және фото</legend>
-                <p class="step-help">Орналасуды, GPS координаттарын және нақты фотофайлдарды қосуға болады. Бұл қадамдағы өрістер міндетті емес.</p>
+                <legend><span>3</span>Фото</legend>
+                <p class="step-help">Фото мен орналасуды қосу міндетті емес.</p>
                 <div class="field-grid two">
-                  <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
-                  <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
                   <div class="photo-upload full-span" data-photo-field="treePhoto">
                     <label class="field" for="tree-photo"><span>Ағаштың фотосуреті</span><input id="tree-photo" name="treePhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="tree-photo-help tree-photo-status tree-photo-error"></label>
-                    <p class="photo-upload-help" id="tree-photo-help">Ағаштың жалпы көрінісін таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <p class="photo-upload-help" id="tree-photo-help">JPEG, PNG немесе WebP · 20 МБ дейін.</p>
                     <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын ағаш фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
                     <p class="photo-upload-status" id="tree-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
                     <p class="photo-upload-error" id="tree-photo-error" data-photo-error role="alert" hidden></p>
                   </div>
                   <div class="photo-upload full-span" data-photo-field="organPhoto">
                     <label class="field" for="organ-photo"><span>Генеративтік мүшенің фотосуреті</span><input id="organ-photo" name="organPhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="organ-photo-help organ-photo-status organ-photo-error"></label>
-                    <p class="photo-upload-help" id="organ-photo-help">Гүл, жеміс, тұқым немесе бүр анық көрінетін фото таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <p class="photo-upload-help" id="organ-photo-help">Гүл, жеміс, тұқым немесе бүр · 20 МБ дейін.</p>
                     <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын генеративтік мүше фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
                     <p class="photo-upload-status" id="organ-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
                     <p class="photo-upload-error" id="organ-photo-error" data-photo-error role="alert" hidden></p>
                   </div>
-                  <p class="photo-upload-note full-span">Әр фото жіберу алдында браузерде JPEG форматына ауысып, ең ұзын жағы 1600 пиксельге және көлемі 750 КБ дейін кішірейеді. Файлдағы камера мен GPS метадеректері алынып тасталады; формадағы GPS өрісі бөлек сақталады. Құрылғыдағы түпнұсқа файл өзгермейді.</p>
                 </div>
+                <details class="optional-fields">
+                  <summary>Орналасуын қосу</summary>
+                  <div class="optional-fields-content field-grid two">
+                    <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
+                    <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
+                  </div>
+                </details>
+                <details class="photo-details">
+                  <summary>Фото туралы</summary>
+                  <p>Фотолар жіберу үшін кішірейтіледі. Түпнұсқа өзгермейді. Файлдағы камера мен GPS метадеректері алынып тасталады.</p>
+                </details>
                 <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
               </fieldset>
 
               <div class="form-error" id="form-error" role="alert" hidden></div>
-              <p class="form-footnote">Жіберу арқылы енгізілген мәліметтердің далалық бақылауға сәйкес екенін растайсыз.</p>
             </form>
 
             <div class="success-panel" id="success-panel" hidden tabindex="-1">
@@ -966,12 +920,14 @@
     </main>
 
     <footer class="site-footer">
-      <div class="shell footer-grid">
-        <div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">⌁</span><span><strong>FOREST ID</strong><small>Цифрлық дендрологиялық паспорттар</small></span></a></div>
-        <p id="footer-organization">Агробиологиялық ғылыми-зерттеу орталығы</p>
-        <div class="footer-links"><a href="#home">Басты бет</a><a href="#register">Студенттерге</a><a href="#catalog">Паспорттар</a><a href="#qr-generator">QR-код</a></div>
+      <div class="shell footer-minimal">
+        <a href="#home">FOREST ID</a>
+        <details class="site-info">
+          <summary>Жоба туралы</summary>
+          <p id="footer-organization">Агробиологиялық ғылыми-зерттеу орталығы</p>
+          <p id="app-mode">Деректер жүктелуде…</p>
+        </details>
       </div>
-      <div class="shell footer-bottom"><span>Орман ботаникасы • Далалық морфологиялық зерттеу</span><span id="app-mode">Деректер жүктелуде…</span></div>
     </footer>
 
     <nav class="mobile-dock" aria-label="Мобильді навигация">
@@ -984,7 +940,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script>
       window.__INITIAL_TREE_ID__ = "";
-      window.__APP_VERSION__ = "1.4.1";
+      window.__APP_VERSION__ = "1.5.0";
     </script>
     <script>
 /*
@@ -4013,7 +3969,17 @@ window.qrcode = qrcode;
         if (field.required) field.setCustomValidity(String(field.value || '').trim() ? '' : 'Міндетті өрісті толтырыңыз.');
       });
       var invalid = fields.find(function (field) { return !field.checkValidity(); });
-      if (invalid) { if (report !== false) invalid.reportValidity(); return false; }
+      if (invalid) {
+        if (report !== false) {
+          var ancestor = invalid.parentElement;
+          while (ancestor && ancestor !== elements.treeForm) {
+            if (ancestor.tagName === 'DETAILS') ancestor.open = true;
+            ancestor = ancestor.parentElement;
+          }
+          invalid.reportValidity();
+        }
+        return false;
+      }
       return true;
     }
 
@@ -4148,7 +4114,7 @@ window.qrcode = qrcode;
       elements.qrTargetLink.textContent = url;
       state.qrDownload = { url: url, forestId: forestId };
       elements.qrResult.hidden = false;
-      elements.qrStatus.textContent = forestId ? forestId + ' жарияланған. QR-код дайын.' : 'Сайттың QR-коды дайын. PNG немесе SVG форматында жүктеңіз.';
+      elements.qrStatus.textContent = forestId ? forestId + ' · QR дайын.' : 'QR дайын.';
     }
 
     function publicSiteUrl() {
@@ -4287,14 +4253,12 @@ window.qrcode = qrcode;
           if (hasExternalRuntime) state.config.appUrl = externalRuntime().siteUrl;
           state.connected = state.mode === 'production';
           state.records = (data.records || []).map(withPassportUrl);
-          renderStats(data.stats || calculateStats(state.records));
           renderCatalog(state.records);
           applyConfig();
           readRoute(applyRoute);
         })
         .catch(function (error) {
           state.records = [];
-          renderStats(calculateStats([]));
           elements.catalogEmpty.hidden = true;
           elements.catalogCount.textContent = 'Деректерді жүктеу мүмкін болмады';
           elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
@@ -4320,23 +4284,10 @@ window.qrcode = qrcode;
       var isDemo = state.mode === 'preview';
       document.getElementById('demo-banner').hidden = !isDemo;
       if (isDemo) {
-        document.getElementById('catalog-kicker').textContent = 'Демо жазбалар';
-        document.getElementById('catalog-description').textContent = 'Бұл оқу үлгілері интерфейсті тексеруге арналған. Атаулар, өлшемдер және зерттеушілер — демонстрациялық деректер.';
+        document.getElementById('catalog-description').textContent = 'Оқу үлгілері. Нақты зерттеулер емес.';
         document.getElementById('catalog-key').textContent = 'Оқу үлгісі';
-        document.getElementById('stat-published-label').textContent = 'Демо паспорт';
-        document.getElementById('stat-species-label').textContent = 'Үлгідегі түр';
-        document.getElementById('stat-groups-label').textContent = 'Үлгідегі топ';
-        document.querySelector('.stats-note').textContent = 'Көрсеткіштер тек демонстрациялық жазбалардан есептелген';
         document.getElementById('success-kicker').textContent = 'Демо жазба браузерде сақталды';
       }
-    }
-
-    function renderStats(stats) {
-      animateNumber(document.getElementById('stat-published'), Number(stats.published || 0));
-      animateNumber(document.getElementById('stat-species'), Number(stats.species || 0));
-      animateNumber(document.getElementById('stat-groups'), Number(stats.groups || 0));
-      var first = state.records[0];
-      if (first) document.getElementById('hero-id').textContent = first.forestId.replace('FOREST-', '');
     }
 
     function renderCatalog(records) {
@@ -4345,7 +4296,7 @@ window.qrcode = qrcode;
       if (!records.length) {
         elements.catalogEmptyMessage.textContent = state.records.length
           ? 'Іздеу сұрауын немесе сүзгіні өзгертіп көріңіз.'
-          : 'Жарияланған паспорттар әлі жоқ. Жазбалар оқытушы тексергеннен кейін осында пайда болады.';
+          : 'Паспорттар оқытушы жариялағаннан кейін пайда болады.';
       }
       elements.catalogGrid.innerHTML = records.map(renderTreeCard).join('');
       mountPublishedPhotos(elements.catalogGrid);
@@ -4369,8 +4320,6 @@ window.qrcode = qrcode;
             '<dl class="tree-meta">',
               metaItem('Құрылым', record.generativeStructure),
               metaItem('Орналасуы', record.location),
-              metaItem('Биіктігі', valueWithUnit(record.heightM, 'м')),
-              metaItem('Бақылау күні', formatHumanDate(record.studyDate)),
             '</dl>',
             '<button class="card-open" type="button" data-tree-id="', escapeAttribute(record.forestId), '">Паспортты ашу <span aria-hidden="true">→</span></button>',
           '</div>',
@@ -4640,20 +4589,19 @@ window.qrcode = qrcode;
               passportItem('Фенологиялық күйі', record.phenology),
             '</dl>',
             '<div class="passport-prose">',
-              '<section><h4>Генеративтік мүшенің пішіні мен түсі</h4><p>', escapeHtml(record.organShapeColor || '—'), '</p></section>',
-              '<section><h4>Тұқым саны мен ерекшеліктері</h4><p>', escapeHtml(record.seedDetails || '—'), '</p></section>',
+              record.organShapeColor ? '<section><h4>Генеративтік мүшенің пішіні мен түсі</h4><p>' + escapeHtml(record.organShapeColor) + '</p></section>' : '',
+              record.seedDetails ? '<section><h4>Тұқым саны мен ерекшеліктері</h4><p>' + escapeHtml(record.seedDetails) + '</p></section>' : '',
               '<section><h4>Морфологиялық сипаттама</h4><p>', escapeHtml(record.morphology || '—'), '</p></section>',
-              '<section><h4>Қорытынды және диагностикалық белгілер</h4><p>', escapeHtml(record.conclusion || '—'), '</p></section>',
+              record.conclusion ? '<section><h4>Қорытынды және диагностикалық белгілер</h4><p>' + escapeHtml(record.conclusion) + '</p></section>' : '',
               organPhoto,
             '</div>',
           '</div>',
           '<aside class="passport-side">',
             '<h3>QR-код</h3>',
-            '<div class="qr-box">', qr, passportUrl ? '<a href="' + escapeAttribute(passportUrl) + '" target="_blank" rel="noopener">' + escapeHtml(passportUrl) + '</a>' : '', '</div>',
+            '<div class="qr-box">', qr, passportUrl ? '<a href="' + escapeAttribute(passportUrl) + '" target="_blank" rel="noopener">Паспорт сілтемесі ↗</a>' : '', '</div>',
             '<div class="research-stamp">',
               '<p>Зерттеуші<strong>', escapeHtml(record.researcher || '—'), '</strong></p>',
-              '<p>Академиялық топ<strong>', escapeHtml(record.academicGroup || '—'), '</strong></p>',
-              '<p>Күйі<strong>', isDemo ? 'Демо үлгі — оқытушы тексермеген' : 'Оқытушы тексерген', '</strong></p>',
+              record.academicGroup ? '<p>Академиялық топ<strong>' + escapeHtml(record.academicGroup) + '</strong></p>' : '',
             '</div>',
             '<div class="passport-actions">',
               passportUrl ? '<button class="button button-dark" type="button" data-copy-url="' + escapeAttribute(passportUrl) + '">Сілтемені көшіру</button>' : '',
@@ -4666,7 +4614,8 @@ window.qrcode = qrcode;
     }
 
     function passportItem(label, value) {
-      return '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value || '—') + '</dd></div>';
+      if (value === undefined || value === null || value === '' || value === '—') return '';
+      return '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>';
     }
 
     function renderQr(url, forestId) {
@@ -4994,22 +4943,6 @@ window.qrcode = qrcode;
         species: new Set(records.map(function (r) { return String(r.scientificName || '').toLocaleLowerCase(); }).filter(Boolean)).size,
         groups: new Set(records.map(function (r) { return String(r.academicGroup || '').toLocaleLowerCase(); }).filter(Boolean)).size
       };
-    }
-
-    function animateNumber(element, target) {
-      if (!element) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        element.textContent = String(target);
-        return;
-      }
-      var started = performance.now();
-      var duration = 650;
-      function frame(now) {
-        var progress = Math.min(1, (now - started) / duration);
-        element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
-        if (progress < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
     }
 
     function showToast(message) {

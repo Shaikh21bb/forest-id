@@ -178,6 +178,20 @@ test('student form shows one step at a time and blocks missing required fields',
   assert.equal(c.elements.submitButton.hidden, false);
 });
 
+test('invalid optional fields expand their details before reporting validation', () => {
+  const c = client();
+  const details = { tagName: 'DETAILS', open: false, parentElement: c.form };
+  const field = element();
+  field.parentElement = { tagName: 'LABEL', parentElement: details };
+  field.setCustomValidity('Invalid measurement');
+  field.reportValidity = () => { assert.equal(details.open, true); return false; };
+  c.elements.formSteps[1].querySelectorAll = () => [field];
+  assert.equal(c.validateFormStep(1, false), false);
+  assert.equal(details.open, false);
+  assert.equal(c.validateFormStep(1), false);
+  assert.equal(details.open, true);
+});
+
 test('actual submission sends prepared JPEG files, never raw File objects, with a compact retry token', async () => {
   const c = client();
   await c.submitForm({ preventDefault() {} });
