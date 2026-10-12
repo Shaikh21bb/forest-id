@@ -478,21 +478,36 @@
   .main-nav .nav-cta::after { display: none; }
   .mobile-dock { display: none; }
   .hero {
-    min-height: calc(100svh - 154px);
-    display: grid; align-items: center;
-    padding: 72px 0;
+    min-height: calc(100vh - 78px);
+    padding-top: clamp(74px, 9vw, 125px);
     background: radial-gradient(circle at 83% 19%, rgba(145, 211, 167, .29), transparent 26%),
       radial-gradient(circle at 14% 78%, rgba(73, 137, 104, .35), transparent 35%),
       linear-gradient(132deg, #09291f 0%, #164c36 63%, #276a49 100%);
   }
-  .hero::after { display: none; }
-  .hero h1 { font-size: clamp(48px, 5.5vw, 72px); }
-  .hero-lead { max-width: 490px; margin-top: 22px; color: rgba(255,255,255,.76); font-size: 17px; }
-  .hero-actions { gap: 12px; margin-top: 30px; }
+  .hero::after { opacity: .25; }
+  .hero-lead { color: rgba(255,255,255,.82); }
   .button-primary { color: var(--forest-950); background: rgba(255,255,255,.95); }
   .button-ghost { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.3); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-  .hero-visual { height: 390px; opacity: .75; }
-  .tree-rings { width: min(350px, 100%); }
+  .hero-assurance { margin: 30px 0 0; color: rgba(255,255,255,.73); font-size: 12px; }
+  .hero-assurance span { margin-right: 7px; color: #aee1af; }
+  .tree-rings { filter: drop-shadow(0 20px 45px rgba(0,0,0,.13)); }
+  .specimen-tag {
+    transform: rotate(-3deg); color: var(--ink);
+    background: rgba(248, 253, 244, .83); border: 1px solid rgba(255,255,255,.74);
+    border-radius: 18px; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  }
+  .specimen-tag::before { display: none; }
+  .stats-row { border-color: rgba(255,255,255,.2); }
+  .process-section { min-height: calc(100vh - 78px); padding-top: 100px; background: transparent; }
+  .process-section .section-heading h2 { font-size: clamp(38px, 4.5vw, 58px); }
+  .process-grid { gap: 16px; border: 0; background: none; }
+  .process-grid li {
+    min-height: 260px; border: 1px solid rgba(255,255,255,.82);
+    border-radius: 22px; background: rgba(255,255,255,.57);
+    box-shadow: 0 14px 35px rgba(18,61,46,.05);
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  }
+  .process-grid li::after { display: none; }
   .catalog-section, .qr-generator-section, .register-section, .passport-section {
     min-height: calc(100svh - 154px);
     background: transparent;
@@ -575,11 +590,6 @@
   .site-info p { margin: 0 0 8px; font-size: 11px; }
   .site-info #app-mode { display: block; font-size: 10px; }
 
-  @media (min-width: 721px) and (max-width: 980px) {
-    .hero-grid { grid-template-columns: 1fr .65fr; gap: 28px; }
-    .hero-visual { height: 300px; margin: 0; }
-  }
-
   @media (max-width: 720px) {
     :root { --shell: calc(100% - 28px); }
     body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
@@ -588,13 +598,23 @@
     .main-nav { gap: 0; max-height: calc(100dvh - 140px); background: rgba(9,42,30,.97); }
     .main-nav a[aria-current="page"] { color: #aee1af; }
     .main-nav .nav-cta { margin-top: 15px; justify-content: center; color: #fff; background: #39785a; }
-    .hero { min-height: calc(100svh - 205px - env(safe-area-inset-bottom)); padding: 50px 0; }
-    .hero-grid { grid-template-columns: 1fr; gap: 0; }
-    .hero h1 { font-size: clamp(42px, 11vw, 56px); }
-    .hero-lead { max-width: 360px; margin-top: 20px; font-size: 15px; }
+    .hero { min-height: calc(100dvh - 130px); padding-top: 55px; }
+    .hero-grid { gap: 2px; }
+    .hero h1 { font-size: clamp(45px, 12vw, 62px); }
+    .hero-lead { margin-top: 22px; }
     .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
     .hero-actions .button { min-height: 48px; padding: 11px 16px; font-size: 12px; }
-    .hero-visual { display: none; }
+    .hero-assurance { max-width: 310px; margin-top: 20px; line-height: 1.55; }
+    .hero-visual { height: 255px; margin: -8px 0 0; }
+    .tree-rings { width: 245px; }
+    .specimen-tag { right: 1%; bottom: 3%; width: 165px; padding: 12px 14px; }
+    .specimen-tag strong { font-size: 16px; }
+    .stats-row { margin-top: 28px; padding-bottom: 30px; }
+    .process-section { min-height: calc(100dvh - 130px); padding: 38px 0 66px; }
+    .process-section .section-heading h2 { font-size: clamp(34px, 9vw, 45px); }
+    .process-grid { gap: 10px; margin-top: 30px; }
+    .process-grid li { min-height: 160px; padding: 20px; }
+    .process-grid strong { margin-top: 22px; }
     .catalog-section, .register-section, .qr-generator-section, .passport-section { min-height: calc(100svh - 205px); padding: 28px 0 36px; }
     .section-heading h2, .register-intro h2 { font-size: 32px; }
     .catalog-tools { gap: 10px; margin-top: 22px; }

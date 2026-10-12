@@ -645,12 +645,14 @@
           if (hasExternalRuntime) state.config.appUrl = externalRuntime().siteUrl;
           state.connected = state.mode === 'production';
           state.records = (data.records || []).map(withPassportUrl);
+          renderStats(data.stats || calculateStats(state.records));
           renderCatalog(state.records);
           applyConfig();
           readRoute(applyRoute);
         })
         .catch(function (error) {
           state.records = [];
+          renderStats(calculateStats([]));
           elements.catalogEmpty.hidden = true;
           elements.catalogCount.textContent = 'Деректерді жүктеу мүмкін болмады';
           elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
@@ -678,8 +680,20 @@
       if (isDemo) {
         document.getElementById('catalog-description').textContent = 'Оқу үлгілері. Нақты зерттеулер емес.';
         document.getElementById('catalog-key').textContent = 'Оқу үлгісі';
+        document.getElementById('stat-published-label').textContent = 'Демо паспорт';
+        document.getElementById('stat-species-label').textContent = 'Үлгідегі түр';
+        document.getElementById('stat-groups-label').textContent = 'Үлгідегі топ';
+        document.querySelector('.stats-note').textContent = 'Көрсеткіштер тек демонстрациялық жазбалардан есептелген';
         document.getElementById('success-kicker').textContent = 'Демо жазба браузерде сақталды';
       }
+    }
+
+    function renderStats(stats) {
+      animateNumber(document.getElementById('stat-published'), Number(stats.published || 0));
+      animateNumber(document.getElementById('stat-species'), Number(stats.species || 0));
+      animateNumber(document.getElementById('stat-groups'), Number(stats.groups || 0));
+      var first = state.records[0];
+      if (first) document.getElementById('hero-id').textContent = first.forestId.replace('FOREST-', '');
     }
 
     function renderCatalog(records) {
@@ -1335,6 +1349,22 @@
         species: new Set(records.map(function (r) { return String(r.scientificName || '').toLocaleLowerCase(); }).filter(Boolean)).size,
         groups: new Set(records.map(function (r) { return String(r.academicGroup || '').toLocaleLowerCase(); }).filter(Boolean)).size
       };
+    }
+
+    function animateNumber(element, target) {
+      if (!element) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = String(target);
+        return;
+      }
+      var started = performance.now();
+      var duration = 650;
+      function frame(now) {
+        var progress = Math.min(1, (now - started) / duration);
+        element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
     }
 
     function showToast(message) {

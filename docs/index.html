@@ -486,21 +486,36 @@
   .main-nav .nav-cta::after { display: none; }
   .mobile-dock { display: none; }
   .hero {
-    min-height: calc(100svh - 154px);
-    display: grid; align-items: center;
-    padding: 72px 0;
+    min-height: calc(100vh - 78px);
+    padding-top: clamp(74px, 9vw, 125px);
     background: radial-gradient(circle at 83% 19%, rgba(145, 211, 167, .29), transparent 26%),
       radial-gradient(circle at 14% 78%, rgba(73, 137, 104, .35), transparent 35%),
       linear-gradient(132deg, #09291f 0%, #164c36 63%, #276a49 100%);
   }
-  .hero::after { display: none; }
-  .hero h1 { font-size: clamp(48px, 5.5vw, 72px); }
-  .hero-lead { max-width: 490px; margin-top: 22px; color: rgba(255,255,255,.76); font-size: 17px; }
-  .hero-actions { gap: 12px; margin-top: 30px; }
+  .hero::after { opacity: .25; }
+  .hero-lead { color: rgba(255,255,255,.82); }
   .button-primary { color: var(--forest-950); background: rgba(255,255,255,.95); }
   .button-ghost { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.3); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-  .hero-visual { height: 390px; opacity: .75; }
-  .tree-rings { width: min(350px, 100%); }
+  .hero-assurance { margin: 30px 0 0; color: rgba(255,255,255,.73); font-size: 12px; }
+  .hero-assurance span { margin-right: 7px; color: #aee1af; }
+  .tree-rings { filter: drop-shadow(0 20px 45px rgba(0,0,0,.13)); }
+  .specimen-tag {
+    transform: rotate(-3deg); color: var(--ink);
+    background: rgba(248, 253, 244, .83); border: 1px solid rgba(255,255,255,.74);
+    border-radius: 18px; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  }
+  .specimen-tag::before { display: none; }
+  .stats-row { border-color: rgba(255,255,255,.2); }
+  .process-section { min-height: calc(100vh - 78px); padding-top: 100px; background: transparent; }
+  .process-section .section-heading h2 { font-size: clamp(38px, 4.5vw, 58px); }
+  .process-grid { gap: 16px; border: 0; background: none; }
+  .process-grid li {
+    min-height: 260px; border: 1px solid rgba(255,255,255,.82);
+    border-radius: 22px; background: rgba(255,255,255,.57);
+    box-shadow: 0 14px 35px rgba(18,61,46,.05);
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  }
+  .process-grid li::after { display: none; }
   .catalog-section, .qr-generator-section, .register-section, .passport-section {
     min-height: calc(100svh - 154px);
     background: transparent;
@@ -583,11 +598,6 @@
   .site-info p { margin: 0 0 8px; font-size: 11px; }
   .site-info #app-mode { display: block; font-size: 10px; }
 
-  @media (min-width: 721px) and (max-width: 980px) {
-    .hero-grid { grid-template-columns: 1fr .65fr; gap: 28px; }
-    .hero-visual { height: 300px; margin: 0; }
-  }
-
   @media (max-width: 720px) {
     :root { --shell: calc(100% - 28px); }
     body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
@@ -596,13 +606,23 @@
     .main-nav { gap: 0; max-height: calc(100dvh - 140px); background: rgba(9,42,30,.97); }
     .main-nav a[aria-current="page"] { color: #aee1af; }
     .main-nav .nav-cta { margin-top: 15px; justify-content: center; color: #fff; background: #39785a; }
-    .hero { min-height: calc(100svh - 205px - env(safe-area-inset-bottom)); padding: 50px 0; }
-    .hero-grid { grid-template-columns: 1fr; gap: 0; }
-    .hero h1 { font-size: clamp(42px, 11vw, 56px); }
-    .hero-lead { max-width: 360px; margin-top: 20px; font-size: 15px; }
+    .hero { min-height: calc(100dvh - 130px); padding-top: 55px; }
+    .hero-grid { gap: 2px; }
+    .hero h1 { font-size: clamp(45px, 12vw, 62px); }
+    .hero-lead { margin-top: 22px; }
     .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
     .hero-actions .button { min-height: 48px; padding: 11px 16px; font-size: 12px; }
-    .hero-visual { display: none; }
+    .hero-assurance { max-width: 310px; margin-top: 20px; line-height: 1.55; }
+    .hero-visual { height: 255px; margin: -8px 0 0; }
+    .tree-rings { width: 245px; }
+    .specimen-tag { right: 1%; bottom: 3%; width: 165px; padding: 12px 14px; }
+    .specimen-tag strong { font-size: 16px; }
+    .stats-row { margin-top: 28px; padding-bottom: 30px; }
+    .process-section { min-height: calc(100dvh - 130px); padding: 38px 0 66px; }
+    .process-section .section-heading h2 { font-size: clamp(34px, 9vw, 45px); }
+    .process-grid { gap: 10px; margin-top: 30px; }
+    .process-grid li { min-height: 160px; padding: 20px; }
+    .process-grid strong { margin-top: 22px; }
     .catalog-section, .register-section, .qr-generator-section, .passport-section { min-height: calc(100svh - 205px); padding: 28px 0 36px; }
     .section-heading h2, .register-intro h2 { font-size: 32px; }
     .catalog-tools { gap: 10px; margin-top: 22px; }
@@ -704,15 +724,17 @@
         <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
+            <p class="eyebrow">Даладағы зерттеуден цифрлық паспортқа</p>
             <h1 id="hero-title">Әр ағаштың<br><em>өз тарихы бар.</em></h1>
-            <p class="hero-lead">Ағаштар мен бұталардың цифрлық паспорттары.</p>
+            <p class="hero-lead">Өсімдікті зерттеңіз, нақты фото мен деректерді жіберіңіз. Оқытушы тексерген жазба ашық каталогта жеке паспортқа айналады.</p>
             <div class="hero-actions">
               <a class="button button-primary" href="#register">Зерттеуді бастау <span aria-hidden="true">→</span></a>
               <a class="button button-ghost" href="#catalog">Паспорттарды көру</a>
             </div>
+            <p class="hero-assurance"><span aria-hidden="true">✦</span> Студент енгізеді · Оқытушы тексереді · Каталог жариялайды</p>
           </div>
 
-          <div class="hero-visual reveal reveal-delay" aria-hidden="true">
+          <div class="hero-visual reveal reveal-delay" aria-label="FOREST ID зерттеу үдерісі">
             <div class="tree-rings" aria-hidden="true">
               <span class="ring ring-one"></span>
               <span class="ring ring-two"></span>
@@ -721,7 +743,35 @@
                 <svg viewBox="0 0 56 56"><path d="M28 7C17 15 11 23 11 33c0 9 7 16 17 16s17-7 17-16C45 23 39 15 28 7Z" fill="currentColor"/><path d="M28 17v28M28 27l-8 6M28 33l9 5" fill="none" stroke="#f7f4ec" stroke-width="2.6" stroke-linecap="round"/></svg>
               </span>
             </div>
+            <div class="specimen-tag">
+              <span class="specimen-label">FOREST ID</span>
+              <strong>FOREST—<span id="hero-id">00001</span></strong>
+              <span class="specimen-rule"></span>
+              <p>Бақылау • Тексеру • Жариялау</p>
+            </div>
           </div>
+        </div>
+
+        <div class="shell stats-row" aria-label="Жоба статистикасы">
+          <div><strong id="stat-published">0</strong><span id="stat-published-label">Жарияланған паспорт</span></div>
+          <div><strong id="stat-species">0</strong><span id="stat-species-label">Зерттелген түр</span></div>
+          <div><strong id="stat-groups">0</strong><span id="stat-groups-label">Зерттеуші топ</span></div>
+          <p class="stats-note"><span></span>Мәліметтер оқытушы тексергеннен кейін ғана жарияланады</p>
+        </div>
+      </section>
+
+      <section class="process-section" data-page="home" aria-labelledby="process-title">
+        <div class="shell">
+          <div class="section-heading compact reveal">
+            <p class="eyebrow">Зерттеу үдерісі</p>
+            <h2 id="process-title">Даладағы бақылаудан цифрлық паспортқа дейін</h2>
+          </div>
+          <ol class="process-grid">
+            <li class="reveal"><span>01</span><strong>Бақылау</strong><p>Өсімдікті далада зерттеп, өлшемдер мен белгілерді тіркеңіз.</p></li>
+            <li class="reveal"><span>02</span><strong>Енгізу</strong><p>Атауы, GPS, фото және морфологиялық сипаттаманы формаға енгізіңіз.</p></li>
+            <li class="reveal"><span>03</span><strong>Тексеру</strong><p>Оқытушы ғылыми атаулар мен өлшемдердің дұрыстығын растайды.</p></li>
+            <li class="reveal"><span>04</span><strong>Жариялау</strong><p>Жеке FOREST ID, ашық паспорт және оған апаратын QR-код жасалады.</p></li>
+          </ol>
         </div>
       </section>
 
@@ -940,7 +990,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script>
       window.__INITIAL_TREE_ID__ = "";
-      window.__APP_VERSION__ = "1.5.0";
+      window.__APP_VERSION__ = "1.5.1";
     </script>
     <script>
 /*
@@ -4253,12 +4303,14 @@ window.qrcode = qrcode;
           if (hasExternalRuntime) state.config.appUrl = externalRuntime().siteUrl;
           state.connected = state.mode === 'production';
           state.records = (data.records || []).map(withPassportUrl);
+          renderStats(data.stats || calculateStats(state.records));
           renderCatalog(state.records);
           applyConfig();
           readRoute(applyRoute);
         })
         .catch(function (error) {
           state.records = [];
+          renderStats(calculateStats([]));
           elements.catalogEmpty.hidden = true;
           elements.catalogCount.textContent = 'Деректерді жүктеу мүмкін болмады';
           elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
@@ -4286,8 +4338,20 @@ window.qrcode = qrcode;
       if (isDemo) {
         document.getElementById('catalog-description').textContent = 'Оқу үлгілері. Нақты зерттеулер емес.';
         document.getElementById('catalog-key').textContent = 'Оқу үлгісі';
+        document.getElementById('stat-published-label').textContent = 'Демо паспорт';
+        document.getElementById('stat-species-label').textContent = 'Үлгідегі түр';
+        document.getElementById('stat-groups-label').textContent = 'Үлгідегі топ';
+        document.querySelector('.stats-note').textContent = 'Көрсеткіштер тек демонстрациялық жазбалардан есептелген';
         document.getElementById('success-kicker').textContent = 'Демо жазба браузерде сақталды';
       }
+    }
+
+    function renderStats(stats) {
+      animateNumber(document.getElementById('stat-published'), Number(stats.published || 0));
+      animateNumber(document.getElementById('stat-species'), Number(stats.species || 0));
+      animateNumber(document.getElementById('stat-groups'), Number(stats.groups || 0));
+      var first = state.records[0];
+      if (first) document.getElementById('hero-id').textContent = first.forestId.replace('FOREST-', '');
     }
 
     function renderCatalog(records) {
@@ -4943,6 +5007,22 @@ window.qrcode = qrcode;
         species: new Set(records.map(function (r) { return String(r.scientificName || '').toLocaleLowerCase(); }).filter(Boolean)).size,
         groups: new Set(records.map(function (r) { return String(r.academicGroup || '').toLocaleLowerCase(); }).filter(Boolean)).size
       };
+    }
+
+    function animateNumber(element, target) {
+      if (!element) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = String(target);
+        return;
+      }
+      var started = performance.now();
+      var duration = 650;
+      function frame(now) {
+        var progress = Math.min(1, (now - started) / duration);
+        element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
     }
 
     function showToast(message) {
