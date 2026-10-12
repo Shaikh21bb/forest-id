@@ -2,6 +2,8 @@
 
 Kazakh-language digital passports for trees and shrubs: field observations, teacher review, a public catalogue, and printable QR codes.
 
+Live site: [FOREST ID](https://shaikh21bb.github.io/forest-id/). Source: [GitHub repository](https://github.com/Shaikh21bb/forest-id).
+
 ## Architecture
 
 - GitHub Pages serves the static interface independently of any local computer.
