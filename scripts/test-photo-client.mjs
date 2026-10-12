@@ -14,7 +14,7 @@ const runtime = {
 };
 const source = (await readFile(resolve(root, 'JavaScript.html'), 'utf8'))
   .replace(/^<script>\s*/, '').replace(/<\/script>\s*$/, '')
-  .replace('  }());', 'window.__photoTest = { state, elements, setupForm, submitForm, prepareSubmissionPayload, payloadFingerprint, submissionId, clearSubmission, callServer, validatedPhotoDataUrl, managedPhotoMarkup, mountPublishedPhotos, resetPhotoLoading, queuePublishedPhoto, renderTreeCard, renderPassport, saveQrBlob, clearQrFiles, applyRoute, updateActiveRoute }; }());');
+  .replace('  }());', 'window.__photoTest = { state, elements, setupForm, showFormStep, validateFormStep, submitForm, prepareSubmissionPayload, payloadFingerprint, submissionId, clearSubmission, callServer, validatedPhotoDataUrl, managedPhotoMarkup, mountPublishedPhotos, resetPhotoLoading, queuePublishedPhoto, renderTreeCard, renderPassport, saveQrBlob, clearQrFiles, applyRoute, updateActiveRoute }; }());');
 const jpeg = Buffer.from([255, 216, 255, 224, 0, 2, 255, 217]).toString('base64');
 // The unit fixture only exercises the client envelope gate. Server tests perform full JPEG parsing.
 const photo = { name: 'test.jpg', mimeType: 'image/jpeg', base64: jpeg };
@@ -29,6 +29,8 @@ function element(value = '') {
     getAttribute(name) { return this.attributes[name] ?? null; },
     removeAttribute(name) { delete this.attributes[name]; },
     setCustomValidity(value) { this.validity = value; },
+    checkValidity() { return !this.validity; },
+    reportValidity() { return !this.validity; },
     querySelector() { return null; },
     querySelectorAll() { return []; },
     appendChild(child) { this.children.push(child); },
@@ -112,8 +114,11 @@ function client(options = {}) {
   const api = window.__photoTest;
   Object.assign(api.elements, {
     treeForm: form, formError: element(), submitButton: element(), successPanel: element(),
-    progressBar: element(), toast: element(), passport: element(), catalogGrid: element(), navToggle: element(),
+    progressBar: element(), requiredProgress: element(), stepBack: element(), stepNext: element(), formNavigation: element(),
+    formSteps: [element(), element(), element()],
+    toast: element(), passport: element(), catalogGrid: element(), navToggle: element(),
   });
+  api.elements.formSteps.forEach((step) => { step.querySelector = () => element(); });
   api.elements.submitButton.querySelector = () => buttonLabel;
   api.state.connected = !options.demo;
   api.state.config.photoUploadsEnabled = options.enabled !== false;
@@ -152,6 +157,25 @@ test('form binds the file helper and keeps file preparation separate from text f
   assert.equal(c.state.photoUploadBound, true);
   assert.equal(c.form.listeners.submit, c.submitForm);
   assert.match(c.controls.studyDate.max, /^\d{4}-\d{2}-\d{2}$/);
+});
+
+test('student form shows one step at a time and blocks missing required fields', () => {
+  const c = client();
+  const required = element();
+  required.required = true;
+  c.elements.formSteps[0].querySelectorAll = () => [required];
+  c.showFormStep(0, false);
+  assert.deepEqual(c.elements.formSteps.map((step) => step.hidden), [false, true, true]);
+  assert.equal(c.validateFormStep(0), false);
+  assert.equal(required.validity, 'Міндетті өрісті толтырыңыз.');
+  required.value = 'Тест студент';
+  assert.equal(c.validateFormStep(0), true);
+  c.showFormStep(1, false);
+  assert.deepEqual(c.elements.formSteps.map((step) => step.hidden), [true, false, true]);
+  assert.equal(c.elements.stepBack.hidden, false);
+  c.showFormStep(2, false);
+  assert.equal(c.elements.stepNext.hidden, true);
+  assert.equal(c.elements.submitButton.hidden, false);
 });
 
 test('actual submission sends prepared JPEG files, never raw File objects, with a compact retry token', async () => {

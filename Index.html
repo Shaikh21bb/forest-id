@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#123d2e">
+    <meta name="theme-color" content="#e8efe9">
     <meta name="description" content="FOREST ID — ағаштар мен бұталардың тексерілген цифрлық паспорттары">
     <title>FOREST ID | Цифрлық дендрологиялық паспорттар</title>
     <?!= include_('Styles'); ?>
@@ -35,30 +35,29 @@
         </button>
 
         <nav class="main-nav" id="main-nav" aria-label="Негізгі навигация">
-          <a href="#home">Басты бет</a>
-          <a href="#catalog">Каталог</a>
-          <a href="#register">Ағаш тіркеу</a>
-          <a href="#qr-generator">QR-код</a>
-          <a class="nav-search" href="#catalog" aria-label="Каталогтан іздеу">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
-          </a>
+          <a href="#home" data-page-link="home">Басты бет</a>
+          <a href="#register" data-page-link="register">Студенттерге</a>
+          <a href="#catalog" data-page-link="catalog">Паспорттар</a>
+          <a href="#qr-generator" data-page-link="qr">QR-код</a>
+          <a class="nav-cta" href="#register">Зерттеуді бастау <span aria-hidden="true">↗</span></a>
         </nav>
       </div>
     </header>
 
     <main id="main">
-      <section class="hero" id="home" aria-labelledby="hero-title">
+      <section class="hero" id="home" data-page="home" aria-labelledby="hero-title">
         <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
         <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
-            <p class="eyebrow">Оқу және зерттеу жобасы</p>
-            <h1 id="hero-title">Әр ағаштың<br><em>өз тарихы бар</em></h1>
-            <p class="hero-lead">Агробиологиялық ғылыми-зерттеу орталығындағы ағаштар мен бұталардың тексерілген цифрлық паспорттары.</p>
+            <p class="eyebrow">Даладағы зерттеуден цифрлық паспортқа</p>
+            <h1 id="hero-title">Әр ағаштың<br><em>өз тарихы бар.</em></h1>
+            <p class="hero-lead">Өсімдікті зерттеңіз, нақты фото мен деректерді жіберіңіз. Оқытушы тексерген жазба ашық каталогта жеке паспортқа айналады.</p>
             <div class="hero-actions">
-              <a class="button button-primary" href="#catalog">Каталогты ашу <span aria-hidden="true">→</span></a>
-              <a class="text-link" href="#register">Зерттеуді енгізу</a>
+              <a class="button button-primary" href="#register">Зерттеуді бастау <span aria-hidden="true">→</span></a>
+              <a class="button button-ghost" href="#catalog">Паспорттарды көру</a>
             </div>
+            <p class="hero-assurance"><span aria-hidden="true">✦</span> Студент енгізеді · Оқытушы тексереді · Каталог жариялайды</p>
           </div>
 
           <div class="hero-visual reveal reveal-delay" aria-label="FOREST ID зерттеу үдерісі">
@@ -87,7 +86,7 @@
         </div>
       </section>
 
-      <section class="process-section" aria-labelledby="process-title">
+      <section class="process-section" data-page="home" aria-labelledby="process-title">
         <div class="shell">
           <div class="section-heading compact reveal">
             <p class="eyebrow">Зерттеу үдерісі</p>
@@ -102,12 +101,12 @@
         </div>
       </section>
 
-      <section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+      <section class="catalog-section" id="catalog" data-page="catalog" aria-labelledby="catalog-title">
         <div class="shell">
           <div class="section-heading split reveal">
             <div>
-              <p class="eyebrow" id="catalog-kicker">Тексерілген жазбалар</p>
-              <h2 id="catalog-title">Ағаштар мен бұталар каталогы</h2>
+              <p class="eyebrow" id="catalog-kicker">Ашық ғылыми қор</p>
+              <h2 id="catalog-title">Ағаштар мен бұталар паспорты</h2>
             </div>
             <p id="catalog-description">Әр карточка оқытушы тексерген ғылыми жазбаға апарады.</p>
           </div>
@@ -140,12 +139,12 @@
           <div class="empty-state" id="catalog-empty" hidden>
             <span aria-hidden="true">⌁</span>
             <h3>Жазба табылмады</h3>
-            <p>Іздеу сұрауын өзгертіп көріңіз.</p>
+            <p id="catalog-empty-message">Жарияланған паспорттар әлі жоқ. Жазбалар оқытушы тексергеннен кейін осында пайда болады.</p>
           </div>
         </div>
       </section>
 
-      <section class="qr-generator-section" id="qr-generator" aria-labelledby="qr-generator-title">
+      <section class="qr-generator-section" id="qr-generator" data-page="qr" aria-labelledby="qr-generator-title">
         <div class="shell qr-generator-grid">
           <div class="section-heading reveal">
             <p class="eyebrow">Көрсету және бөлісу</p>
@@ -174,7 +173,7 @@
         </div>
       </section>
 
-      <section class="passport-section" id="passport" aria-labelledby="passport-title" hidden>
+      <section class="passport-section" id="passport" data-page="passport" aria-labelledby="passport-title" hidden>
         <div class="shell">
           <button class="back-button" id="passport-back" type="button"><span aria-hidden="true">←</span> Каталогқа оралу</button>
           <article class="passport" id="passport-content">
@@ -183,16 +182,20 @@
         </div>
       </section>
 
-      <section class="register-section" id="register" aria-labelledby="register-title">
+      <section class="register-section" id="register" data-page="register" aria-labelledby="register-title">
         <div class="shell register-grid">
           <div class="register-intro reveal">
-            <p class="eyebrow">Далалық зерттеу</p>
-            <h2 id="register-title">Ағашты тіркеу</h2>
-            <p>Міндетті өрістерді толтырып, далалық бақылау нәтижелерін жіберіңіз. FOREST ID нөмірі автоматты түрде беріледі.</p>
+            <p class="eyebrow">Студенттің жұмыс кеңістігі</p>
+            <h2 id="register-title">Зерттеуді<br>оңай жіберіңіз.</h2>
+            <p>Үш қадам, бес міндетті өріс. Қалған мәліметтер мен фотоларды зерттеуіңізге қарай қосыңыз.</p>
+            <div class="required-guide" role="note">
+              <strong><span aria-hidden="true">✳</span> Міндетті бес өріс</strong>
+              <p>Зерттеуші · Қазақша атауы · Ғылыми атауы · Генеративтік құрылым · Морфологиялық сипаттама</p>
+            </div>
             <div class="register-principles">
               <div><span>01</span><p><strong>Нақты өлшем</strong>Өлшеу бірліктерін тексеріңіз.</p></div>
               <div><span>02</span><p><strong>Ғылыми атау</strong>Латынша атауды анықтағышпен салыстырыңыз.</p></div>
-              <div><span>03</span><p><strong>Сапалы фото</strong>Ағаш пен генеративтік мүшені анық көрсетіңіз.</p></div>
+              <div><span>03</span><p><strong>Фото — файл ретінде</strong>Ағаш пен генеративтік мүшені анық көрсетіңіз. Фото қосу міндетті емес.</p></div>
             </div>
           </div>
 
@@ -201,11 +204,19 @@
               <div class="form-progress" aria-hidden="true"><span id="form-progress-bar"></span></div>
               <div class="form-head">
                 <span class="step-badge">FOREST ID</span>
-                <p><strong>Жаңа зерттеу</strong><span><b>*</b> міндетті өрістер</span></p>
+                <p><strong>Жаңа зерттеу</strong><span><b>*</b> міндетті өріс</span></p>
               </div>
 
-              <fieldset>
+              <div class="form-stepper" aria-label="Форманы толтыру кезеңдері">
+                <div class="form-step-dot" data-step-dot="0"><span>01</span><strong>Өсімдік</strong></div>
+                <div class="form-step-dot" data-step-dot="1"><span>02</span><strong>Сипаттама</strong></div>
+                <div class="form-step-dot" data-step-dot="2"><span>03</span><strong>Фото және жіберу</strong></div>
+              </div>
+              <p class="required-progress" id="required-progress" role="status" aria-live="polite">Міндетті өрістер: 0 / 5</p>
+
+              <fieldset data-form-step="0">
                 <legend><span>1</span>Зерттеуші және өсімдік</legend>
+                <p class="step-help">Алдымен өз атыңызды және зерттеген өсімдіктің атауларын жазыңыз.</p>
                 <div class="field-grid two">
                   <label class="field"><span>Зерттеуші(лер) <b>*</b></span><input name="researcher" required maxlength="160" autocomplete="name" placeholder="Аты-жөні"></label>
                   <label class="field"><span>Академиялық топ</span><input name="academicGroup" maxlength="80" placeholder="Мысалы: БИО-101"></label>
@@ -216,8 +227,9 @@
                 </div>
               </fieldset>
 
-              <fieldset>
+              <fieldset data-form-step="1">
                 <legend><span>2</span>Морфологиялық бақылау</legend>
+                <p class="step-help">Құрылымды таңдаңыз және өзіңіз байқаған белгілерді сипаттаңыз. Өлшемдер бар болса қосыңыз.</p>
                 <div class="field-grid two">
                   <label class="field"><span>Генеративтік құрылым <b>*</b></span><select name="generativeStructure" required><option value="">Таңдаңыз</option><option>Гүл</option><option>Жеміс</option><option>Тұқым</option><option>Бүр</option><option>Бірнеше құрылым</option></select></label>
                   <label class="field"><span>Таралу тәсілі</span><select name="dispersal"><option value="">Таңдаңыз</option><option>Жел</option><option>Жануар</option><option>Су</option><option>Басқа</option><option>Анықталмаған</option></select></label>
@@ -236,8 +248,9 @@
                 <label class="field full"><span>Ғылыми қорытынды</span><textarea name="conclusion" maxlength="2000" rows="4" placeholder="Түрді анықтауға мүмкіндік берген негізгі белгілер"></textarea></label>
               </fieldset>
 
-              <fieldset>
+              <fieldset data-form-step="2">
                 <legend><span>3</span>Орналасуы және фото</legend>
+                <p class="step-help">Орналасуды, GPS координаттарын және нақты фотофайлдарды қосуға болады. Бұл қадамдағы өрістер міндетті емес.</p>
                 <div class="field-grid two">
                   <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
                   <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
@@ -261,7 +274,6 @@
               </fieldset>
 
               <div class="form-error" id="form-error" role="alert" hidden></div>
-              <button class="button button-submit" id="submit-button" type="submit"><span>Зерттеуді жіберу</span><i aria-hidden="true">→</i></button>
               <p class="form-footnote">Жіберу арқылы енгізілген мәліметтердің далалық бақылауға сәйкес екенін растайсыз.</p>
             </form>
 
@@ -276,6 +288,11 @@
               </div>
             </div>
           </div>
+          <div class="form-navigation" id="form-navigation">
+            <button class="button button-step-back" id="step-back" type="button" hidden>← Артқа</button>
+            <button class="button button-step-next" id="step-next" type="button">Келесі қадам <span aria-hidden="true">→</span></button>
+            <button class="button button-submit" id="submit-button" type="submit" form="tree-form" hidden><span>Зерттеуді жіберу</span><i aria-hidden="true">→</i></button>
+          </div>
         </div>
       </section>
     </main>
@@ -284,10 +301,17 @@
       <div class="shell footer-grid">
         <div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">⌁</span><span><strong>FOREST ID</strong><small>Цифрлық дендрологиялық паспорттар</small></span></a></div>
         <p id="footer-organization">Агробиологиялық ғылыми-зерттеу орталығы</p>
-        <div class="footer-links"><a href="#catalog">Каталог</a><a href="#register">Ағаш тіркеу</a><a href="#top">Жоғарыға ↑</a></div>
+        <div class="footer-links"><a href="#home">Басты бет</a><a href="#register">Студенттерге</a><a href="#catalog">Паспорттар</a><a href="#qr-generator">QR-код</a></div>
       </div>
       <div class="shell footer-bottom"><span>Орман ботаникасы • Далалық морфологиялық зерттеу</span><span id="app-mode">Деректер жүктелуде…</span></div>
     </footer>
+
+    <nav class="mobile-dock" aria-label="Мобильді навигация">
+      <a href="#home" data-page-link="home"><span aria-hidden="true">⌂</span><small>Басты</small></a>
+      <a href="#register" data-page-link="register"><span aria-hidden="true">✎</span><small>Зерттеу</small></a>
+      <a href="#catalog" data-page-link="catalog"><span aria-hidden="true">▦</span><small>Каталог</small></a>
+      <a href="#qr-generator" data-page-link="qr"><span aria-hidden="true">▣</span><small>QR</small></a>
+    </nav>
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script>

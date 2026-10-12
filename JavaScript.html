@@ -119,6 +119,8 @@
       setupQrGenerator();
       setupPhotoControls();
       updateModeLabel();
+      if (new URL(window.location.href).searchParams.get('tree') || window.__INITIAL_TREE_ID__) showOnlyPassport();
+      else showPage(pageForHash(validSectionHash(window.location.hash)));
       loadBootstrap();
     }
 
@@ -132,10 +134,16 @@
       elements.catalogGrid = document.getElementById('catalog-grid');
       elements.catalogCount = document.getElementById('catalog-count');
       elements.catalogEmpty = document.getElementById('catalog-empty');
+      elements.catalogEmptyMessage = document.getElementById('catalog-empty-message');
       elements.treeForm = document.getElementById('tree-form');
       elements.formError = document.getElementById('form-error');
       elements.submitButton = document.getElementById('submit-button');
       elements.progressBar = document.getElementById('form-progress-bar');
+      elements.requiredProgress = document.getElementById('required-progress');
+      elements.stepBack = document.getElementById('step-back');
+      elements.stepNext = document.getElementById('step-next');
+      elements.formNavigation = document.getElementById('form-navigation');
+      elements.formSteps = Array.from(document.querySelectorAll('[data-form-step]'));
       elements.successPanel = document.getElementById('success-panel');
       elements.passport = document.getElementById('passport');
       elements.passportContent = document.getElementById('passport-content');
@@ -195,6 +203,20 @@
     function validSectionHash(hash) {
       var value = '#' + String(hash || '').replace(/^#/, '');
       return ['#home', '#catalog', '#register', '#qr-generator', '#top', '#main'].indexOf(value) !== -1 ? value : '#home';
+    }
+
+    function pageForHash(hash) {
+      return { '#catalog': 'catalog', '#register': 'register', '#qr-generator': 'qr' }[hash] || 'home';
+    }
+
+    function showPage(page) {
+      document.querySelectorAll('main > section[data-page]').forEach(function (section) {
+        section.hidden = section.getAttribute('data-page') !== page;
+      });
+      document.querySelectorAll('[data-page-link]').forEach(function (link) {
+        if (link.getAttribute('data-page-link') === page) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
     }
 
     function readRoute(callback) {
@@ -292,17 +314,55 @@
       });
       elements.treeForm.addEventListener('change', updateFormProgress);
       elements.treeForm.addEventListener('submit', submitForm);
+      elements.stepBack.addEventListener('click', function () { showFormStep(state.formStep - 1, true); });
+      elements.stepNext.addEventListener('click', function () {
+        if (validateFormStep(state.formStep)) showFormStep(state.formStep + 1, true);
+      });
 
       document.getElementById('locate-button').addEventListener('click', fillLocation);
       document.getElementById('new-record-button').addEventListener('click', function () {
         elements.successPanel.hidden = true;
         elements.treeForm.hidden = false;
+        elements.formNavigation.hidden = false;
         elements.treeForm.reset();
         clearSubmission();
+        showFormStep(0, false);
         updateFormProgress();
         elements.treeForm.elements.researcher.focus();
       });
+      showFormStep(0, false);
       updateFormProgress();
+    }
+
+    function showFormStep(index, focus) {
+      state.formStep = Math.max(0, Math.min(elements.formSteps.length - 1, index));
+      elements.formSteps.forEach(function (step, stepIndex) { step.hidden = stepIndex !== state.formStep; });
+      document.querySelectorAll('[data-step-dot]').forEach(function (dot) {
+        var dotIndex = Number(dot.getAttribute('data-step-dot'));
+        dot.classList.toggle('is-active', dotIndex === state.formStep);
+        dot.classList.toggle('is-complete', dotIndex < state.formStep);
+        if (dotIndex === state.formStep) dot.setAttribute('aria-current', 'step');
+        else dot.removeAttribute('aria-current');
+      });
+      elements.stepBack.hidden = state.formStep === 0;
+      elements.stepNext.hidden = state.formStep === elements.formSteps.length - 1;
+      elements.submitButton.hidden = state.formStep !== elements.formSteps.length - 1;
+      if (focus) {
+        var legend = elements.formSteps[state.formStep].querySelector('legend');
+        legend.setAttribute('tabindex', '-1');
+        legend.focus({ preventScroll: true });
+        elements.treeForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function validateFormStep(index, report) {
+      var fields = Array.from(elements.formSteps[index].querySelectorAll('input, select, textarea'));
+      fields.forEach(function (field) {
+        if (field.required) field.setCustomValidity(String(field.value || '').trim() ? '' : 'Міндетті өрісті толтырыңыз.');
+      });
+      var invalid = fields.find(function (field) { return !field.checkValidity(); });
+      if (invalid) { if (report !== false) invalid.reportValidity(); return false; }
+      return true;
     }
 
     function setupPassportControls() {
@@ -588,6 +648,7 @@
           elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
           updateModeLabel();
           showToast(errorMessage(error));
+          readRoute(applyRoute);
         });
     }
 
@@ -629,6 +690,11 @@
     function renderCatalog(records) {
       elements.catalogCount.textContent = records.length + (state.mode === 'preview' ? ' демо жазба' : ' тексерілген жазба');
       elements.catalogEmpty.hidden = records.length !== 0;
+      if (!records.length) {
+        elements.catalogEmptyMessage.textContent = state.records.length
+          ? 'Іздеу сұрауын немесе сүзгіні өзгертіп көріңіз.'
+          : 'Жарияланған паспорттар әлі жоқ. Жазбалар оқытушы тексергеннен кейін осында пайда болады.';
+      }
       elements.catalogGrid.innerHTML = records.map(renderTreeCard).join('');
       mountPublishedPhotos(elements.catalogGrid);
     }
@@ -844,10 +910,7 @@
 
     function showOnlyPassport() {
       resetPhotoLoading();
-      document.querySelectorAll('main > section').forEach(function (section) {
-        section.hidden = section.id !== 'passport';
-      });
-      elements.passport.hidden = false;
+      showPage('passport');
       closeNavigation();
     }
 
@@ -866,16 +929,16 @@
       ++state.passportRequest;
       targetHash = validSectionHash(targetHash);
       updateActiveRoute('section:' + targetHash);
-      document.querySelectorAll('main > section').forEach(function (section) { section.hidden = false; });
-      elements.passport.hidden = true;
+      showPage(pageForHash(targetHash));
       mountPublishedPhotos(elements.catalogGrid);
       document.title = 'FOREST ID | Цифрлық дендрологиялық паспорттар';
       closeNavigation();
       if (updateHistory) pushRoute('', targetHash);
       requestAnimationFrame(function () {
-        var target = document.getElementById(targetHash.slice(1));
+        var target = document.getElementById(pageForHash(targetHash) === 'home' ? 'home' : targetHash.slice(1));
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
+          if (updateHistory) target.scrollIntoView({ behavior: 'smooth' });
+          else window.scrollTo(0, 0);
           if (updateHistory) focusHeading(target);
         }
       });
@@ -970,14 +1033,18 @@
       event.preventDefault();
       if (state.submitting) return;
       elements.formError.hidden = true;
-      elements.treeForm.querySelectorAll('[required]').forEach(function (field) {
-        field.setCustomValidity(String(field.value || '').trim() ? '' : 'Міндетті өрісті толтырыңыз.');
-      });
+      for (var step = 0; step < elements.formSteps.length - 1; step++) {
+        if (!validateFormStep(step, false)) { showFormStep(step, true); validateFormStep(step); return; }
+      }
       var gps = elements.treeForm.elements.gps;
       var coordinates = gps.value.trim().split(',').map(function (value) { return value.trim(); });
       var validGps = !gps.value.trim() || (coordinates.length === 2 && coordinates.every(function (value) { return /^[-+]?\d+(?:\.\d+)?$/.test(value); }) && Math.abs(Number(coordinates[0])) <= 90 && Math.abs(Number(coordinates[1])) <= 180);
       gps.setCustomValidity(validGps ? '' : 'GPS мәнін ендік, бойлық түрінде енгізіңіз. Мысалы: 43.238949, 76.889709.');
-      if (!elements.treeForm.reportValidity()) return;
+      if (!validateFormStep(elements.formSteps.length - 1)) {
+        showFormStep(elements.formSteps.length - 1, false);
+        validateFormStep(elements.formSteps.length - 1);
+        return;
+      }
 
       var payload = {};
       // File inputs are prepared separately; raw File objects must never enter
@@ -998,6 +1065,7 @@
           setSubmitting(false);
           clearSubmission();
           elements.treeForm.hidden = true;
+          elements.formNavigation.hidden = true;
           document.getElementById('success-id').textContent = result.forestId;
           document.getElementById('success-message').textContent = result.message || 'Жазба оқытушының тексеруіне жіберілді.';
           elements.successPanel.hidden = false;
@@ -1016,6 +1084,8 @@
       state.submitting = isSubmitting;
       Array.from(elements.treeForm.elements).forEach(function (field) { field.disabled = isSubmitting; });
       elements.submitButton.disabled = isSubmitting;
+      elements.stepBack.disabled = isSubmitting;
+      elements.stepNext.disabled = isSubmitting;
       elements.submitButton.querySelector('span').textContent = isSubmitting ? 'Сақталуда…' : 'Зерттеуді жіберу';
     }
 
@@ -1081,10 +1151,11 @@
     }
 
     function updateFormProgress() {
-      var fields = Array.from(elements.treeForm.querySelectorAll('input:not([name="website"]), select, textarea'));
+      var fields = Array.from(elements.treeForm.querySelectorAll('[required]'));
       var filled = fields.filter(function (field) { return String(field.value || '').trim(); }).length;
       var progress = Math.max(8, Math.round((filled / fields.length) * 100));
       elements.progressBar.style.width = progress + '%';
+      elements.requiredProgress.textContent = 'Міндетті өрістер: ' + filled + ' / ' + fields.length;
     }
 
     function fillLocation() {
