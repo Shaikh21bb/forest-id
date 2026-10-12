@@ -64,6 +64,7 @@
   }
   .skip-link:focus { transform: translateY(0); }
   :focus-visible { outline: 3px solid rgba(197, 157, 89, .75); outline-offset: 3px; }
+  :is(h1, h2, h3, legend)[tabindex="-1"]:focus, #success-panel:focus { outline: none; }
   .demo-banner { padding: 12px 0; color: #59451f; background: #f0dfb6; border-bottom: 1px solid #d5bd82; }
   .demo-banner .shell { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 12px; }
   .demo-banner strong { flex: 0 0 auto; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
@@ -983,7 +984,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script>
       window.__INITIAL_TREE_ID__ = "";
-      window.__APP_VERSION__ = "1.4.0";
+      window.__APP_VERSION__ = "1.4.1";
     </script>
     <script>
 /*
