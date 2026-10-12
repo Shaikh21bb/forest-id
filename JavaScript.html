@@ -1,0 +1,877 @@
+<script>
+  (function () {
+    'use strict';
+
+    var hasExternalRuntime = Object.prototype.hasOwnProperty.call(window, 'FOREST_ID_RUNTIME');
+    var publicMethods = ['getBootstrapData', 'getCatalog', 'getTreePassport', 'submitTree'];
+    var state = {
+      config: {
+        projectTitle: 'FOREST ID',
+        organization: 'Агробиологиялық ғылыми-зерттеу орталығы',
+        appUrl: ''
+      },
+      records: [],
+      connected: false,
+      passportRequest: 0,
+      submitting: false,
+      submission: null,
+      mode: hasExternalRuntime || hasAppsScriptBridge() ? 'production' : 'preview'
+    };
+
+    var elements = {};
+    var demoRecords = [
+      {
+        forestId: 'FOREST-00001',
+        status: 'ЖАРИЯЛАНДЫ',
+        researcher: 'Айдана Серік, Мұрат Әлі',
+        academicGroup: 'БИО-101',
+        kzName: 'Ақ қайың',
+        scientificName: 'Betula pendula Roth',
+        family: 'Betulaceae',
+        plantGroup: 'Ағаш',
+        generativeStructure: 'Жеміс',
+        dispersal: 'Жел',
+        treeWidthMm: '42',
+        organLengthMm: '3.2',
+        organWidthMm: '2.1',
+        organShapeColor: 'Оқу үлгісі: сопақша, қоңыр түсті.',
+        fruitType: 'Оқу үлгісі: жаңғақша',
+        seedDetails: 'Оқу үлгісі: бір тұқым, екі қанатша байқалады.',
+        phenology: 'Оқу үлгісі: жемістің пісуі',
+        organPhotoUrl: '',
+        heightM: '14.6',
+        dbhCm: '31.2',
+        location: 'Дендрарий, 2-сектор',
+        gps: '43.238949, 76.889709',
+        photoUrl: '',
+        studyDate: '2026-09-18',
+        morphology: 'Жемісі — бір тұқымды, қос қанатты жаңғақша. Жеміс сырғасы цилиндр пішінді, піскенде қоңыр түсті.',
+        conclusion: 'Ақ қабық, қос ара тісті жапырақ және қанатты жаңғақша түрді анықтаудың негізгі белгілері болды.',
+        publishedAt: '2026-09-20T10:30:00+05:00',
+        passportUrl: ''
+      },
+      {
+        forestId: 'FOREST-00002',
+        status: 'ЖАРИЯЛАНДЫ',
+        researcher: 'Дана Бекен',
+        academicGroup: 'БИО-102',
+        kzName: 'Кәдімгі қарағай',
+        scientificName: 'Pinus sylvestris L.',
+        family: 'Pinaceae',
+        plantGroup: 'Ағаш',
+        generativeStructure: 'Бүр',
+        dispersal: 'Жел',
+        treeWidthMm: '38',
+        heightM: '18.2',
+        dbhCm: '36.5',
+        location: 'Дендрарий, солтүстік аллея',
+        gps: '43.239105, 76.890120',
+        photoUrl: '',
+        studyDate: '2026-09-19',
+        morphology: 'Аналық бүрлері сопақша-конус пішінді. Қабыршақтары тығыз, тұқымы қанатты.',
+        conclusion: 'Екі-екіден орналасқан қылқандары мен жетілген бүрдің пішіні Pinus sylvestris түріне сәйкес.',
+        publishedAt: '2026-09-21T14:15:00+05:00',
+        passportUrl: ''
+      },
+      {
+        forestId: 'FOREST-00003',
+        status: 'ЖАРИЯЛАНДЫ',
+        researcher: 'Мадина Асыл',
+        academicGroup: 'БИО-101',
+        kzName: 'Долана',
+        scientificName: 'Crataegus sanguinea Pall.',
+        family: 'Rosaceae',
+        plantGroup: 'Бұта',
+        generativeStructure: 'Жеміс',
+        dispersal: 'Жануар',
+        treeWidthMm: '17',
+        heightM: '3.8',
+        dbhCm: '9.4',
+        location: 'Жеміс бағының шығыс бөлігі',
+        gps: '43.238510, 76.889180',
+        photoUrl: '',
+        studyDate: '2026-09-22',
+        morphology: 'Жемістері домалақ, қан қызыл, бірнеше данадан топтасқан. Жеміс ішінде 3–4 сүйекше байқалды.',
+        conclusion: 'Тікенекті бұтақ, қалақшалы жапырақ және қызыл көпсүйекті жеміс — негізгі диагностикалық белгілер.',
+        publishedAt: '2026-09-23T09:00:00+05:00',
+        passportUrl: ''
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', initialise);
+
+    function initialise() {
+      cacheElements();
+      setupNavigation();
+      setupRevealAnimations();
+      setupCatalog();
+      setupForm();
+      setupPassportControls();
+      updateModeLabel();
+      loadBootstrap();
+    }
+
+    function cacheElements() {
+      elements.header = document.querySelector('.site-header');
+      elements.navToggle = document.querySelector('.nav-toggle');
+      elements.nav = document.getElementById('main-nav');
+      elements.catalogForm = document.getElementById('catalog-filter');
+      elements.catalogQuery = document.getElementById('catalog-query');
+      elements.catalogStructure = document.getElementById('catalog-structure');
+      elements.catalogGrid = document.getElementById('catalog-grid');
+      elements.catalogCount = document.getElementById('catalog-count');
+      elements.catalogEmpty = document.getElementById('catalog-empty');
+      elements.treeForm = document.getElementById('tree-form');
+      elements.formError = document.getElementById('form-error');
+      elements.submitButton = document.getElementById('submit-button');
+      elements.progressBar = document.getElementById('form-progress-bar');
+      elements.successPanel = document.getElementById('success-panel');
+      elements.passport = document.getElementById('passport');
+      elements.passportContent = document.getElementById('passport-content');
+      elements.toast = document.getElementById('toast');
+    }
+
+    function setupNavigation() {
+      window.addEventListener('scroll', function () {
+        elements.header.classList.toggle('scrolled', window.scrollY > 12);
+      }, { passive: true });
+
+      elements.navToggle.addEventListener('click', function () {
+        var open = !document.body.classList.contains('nav-open');
+        document.body.classList.toggle('nav-open', open);
+        elements.navToggle.setAttribute('aria-expanded', String(open));
+      });
+
+      elements.nav.addEventListener('click', function (event) {
+        if (event.target.closest('a')) closeNavigation();
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && document.body.classList.contains('nav-open')) {
+          closeNavigation();
+          elements.navToggle.focus();
+        }
+      });
+
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest('a[href^="#"]');
+        if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        exitPassport(validSectionHash(link.getAttribute('href')), true);
+      });
+
+      if (usesAppsScriptBridge()) {
+        if (window.google.script.history) {
+          window.google.script.history.setChangeHandler(function (event) {
+            applyRoute(event.location);
+          });
+        }
+      } else {
+        window.addEventListener('popstate', function () { readRoute(applyRoute); });
+      }
+    }
+
+    function validSectionHash(hash) {
+      var value = '#' + String(hash || '').replace(/^#/, '');
+      return ['#home', '#catalog', '#register', '#top', '#main'].indexOf(value) !== -1 ? value : '#home';
+    }
+
+    function readRoute(callback) {
+      if (usesAppsScriptBridge()) {
+        if (window.google.script.url) window.google.script.url.getLocation(callback);
+        else callback({ parameter: { tree: window.__INITIAL_TREE_ID__ || '' }, hash: '' });
+        return;
+      }
+      var url = new URL(window.location.href);
+      callback({ parameter: { tree: url.searchParams.get('tree') || '' }, hash: url.hash });
+    }
+
+    function applyRoute(location) {
+      var id = location && location.parameter && location.parameter.tree;
+      if (id) openPassport(id, false);
+      else exitPassport(validSectionHash(location && location.hash), false);
+    }
+
+    function pushRoute(forestId, hash) {
+      var params = forestId ? { tree: forestId } : {};
+      if (usesAppsScriptBridge()) {
+        if (window.google.script.history) window.google.script.history.push(params, params, hash.replace(/^#/, ''));
+        return;
+      }
+      var url = new URL(window.location.href);
+      if (forestId) url.searchParams.set('tree', forestId);
+      else url.searchParams.delete('tree');
+      url.hash = hash;
+      window.history.pushState(params, '', url.toString());
+    }
+
+    function focusHeading(section) {
+      if (!section) return;
+      var heading = section.querySelector('h1, h2') || section;
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+
+    function closeNavigation() {
+      document.body.classList.remove('nav-open');
+      elements.navToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function setupRevealAnimations() {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (item) { item.classList.add('is-visible'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.13 });
+      items.forEach(function (item) { observer.observe(item); });
+    }
+
+    function setupCatalog() {
+      elements.catalogForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        applyCatalogFilter();
+      });
+      elements.catalogQuery.addEventListener('input', debounce(applyCatalogFilter, 180));
+      elements.catalogStructure.addEventListener('change', applyCatalogFilter);
+      elements.catalogGrid.addEventListener('click', function (event) {
+        if (event.target.closest('[data-retry-bootstrap]')) {
+          loadBootstrap();
+          return;
+        }
+        var button = event.target.closest('[data-tree-id]');
+        if (button) openPassport(button.getAttribute('data-tree-id'), true);
+      });
+    }
+
+    function setupForm() {
+      var today = new Date();
+      var dateInput = elements.treeForm.elements.studyDate;
+      dateInput.max = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+      elements.treeForm.addEventListener('input', function (event) {
+        if (event.target.setCustomValidity) event.target.setCustomValidity('');
+        updateFormProgress();
+      });
+      elements.treeForm.addEventListener('change', updateFormProgress);
+      elements.treeForm.addEventListener('submit', submitForm);
+
+      document.getElementById('locate-button').addEventListener('click', fillLocation);
+      document.getElementById('new-record-button').addEventListener('click', function () {
+        elements.successPanel.hidden = true;
+        elements.treeForm.hidden = false;
+        elements.treeForm.reset();
+        clearSubmission();
+        updateFormProgress();
+        elements.treeForm.elements.researcher.focus();
+      });
+      updateFormProgress();
+    }
+
+    function setupPassportControls() {
+      document.getElementById('passport-back').addEventListener('click', function () { closePassport(true); });
+      elements.passportContent.addEventListener('click', function (event) {
+        var copyButton = event.target.closest('[data-copy-url]');
+        if (copyButton) copyText(copyButton.getAttribute('data-copy-url'));
+        var printButton = event.target.closest('[data-print-passport]');
+        if (printButton) window.print();
+      });
+    }
+
+    function loadBootstrap() {
+      state.connected = false;
+      elements.catalogCount.textContent = 'Жазбалар жүктелуде…';
+      elements.catalogGrid.innerHTML = '<div class="loading-card">Деректер жүктелуде…</div>';
+      updateModeLabel();
+      callServer('getBootstrapData')
+        .then(function (data) {
+          if (!data || !Array.isArray(data.records)) throw new Error('Серверден каталогтың дұрыс жауабы алынбады.');
+          state.config = Object.assign(state.config, data.config || {});
+          if (hasExternalRuntime) state.config.appUrl = externalRuntime().siteUrl;
+          state.connected = state.mode === 'production';
+          state.records = (data.records || []).map(withPassportUrl);
+          renderStats(data.stats || calculateStats(state.records));
+          renderCatalog(state.records);
+          applyConfig();
+          readRoute(applyRoute);
+        })
+        .catch(function (error) {
+          state.records = [];
+          renderStats(calculateStats([]));
+          elements.catalogEmpty.hidden = true;
+          elements.catalogCount.textContent = 'Деректерді жүктеу мүмкін болмады';
+          elements.catalogGrid.innerHTML = '<div class="empty-state" style="display:block;grid-column:1/-1"><h3>Деректер жүктелмеді</h3><p>' + escapeHtml(errorMessage(error)) + '</p><button class="button button-dark" type="button" data-retry-bootstrap>Қайта жүктеу</button></div>';
+          updateModeLabel();
+          showToast(errorMessage(error));
+        });
+    }
+
+    function applyConfig() {
+      var organization = state.config.organization || '';
+      document.getElementById('footer-organization').textContent = organization;
+      updateModeLabel();
+    }
+
+    function updateModeLabel() {
+      var label = document.getElementById('app-mode');
+      if (!label) return;
+      label.textContent = state.mode === 'preview'
+        ? 'Демо режимі • v' + (window.__APP_VERSION__ || '1.0.0')
+        : (state.connected ? 'Google Sheets базасымен байланысты' : 'Google Sheets қосылымы расталмады') + ' • v' + (window.__APP_VERSION__ || '1.0.0');
+      var isDemo = state.mode === 'preview';
+      document.getElementById('demo-banner').hidden = !isDemo;
+      if (isDemo) {
+        document.getElementById('catalog-kicker').textContent = 'Демо жазбалар';
+        document.getElementById('catalog-description').textContent = 'Бұл оқу үлгілері интерфейсті тексеруге арналған. Атаулар, өлшемдер және зерттеушілер — демонстрациялық деректер.';
+        document.getElementById('catalog-key').textContent = 'Оқу үлгісі';
+        document.getElementById('stat-published-label').textContent = 'Демо паспорт';
+        document.getElementById('stat-species-label').textContent = 'Үлгідегі түр';
+        document.getElementById('stat-groups-label').textContent = 'Үлгідегі топ';
+        document.querySelector('.stats-note').textContent = 'Көрсеткіштер тек демонстрациялық жазбалардан есептелген';
+        document.getElementById('success-kicker').textContent = 'Демо жазба браузерде сақталды';
+      }
+    }
+
+    function renderStats(stats) {
+      animateNumber(document.getElementById('stat-published'), Number(stats.published || 0));
+      animateNumber(document.getElementById('stat-species'), Number(stats.species || 0));
+      animateNumber(document.getElementById('stat-groups'), Number(stats.groups || 0));
+      var first = state.records[0];
+      if (first) document.getElementById('hero-id').textContent = first.forestId.replace('FOREST-', '');
+    }
+
+    function renderCatalog(records) {
+      elements.catalogCount.textContent = records.length + (state.mode === 'preview' ? ' демо жазба' : ' тексерілген жазба');
+      elements.catalogEmpty.hidden = records.length !== 0;
+      elements.catalogGrid.innerHTML = records.map(renderTreeCard).join('');
+    }
+
+    function renderTreeCard(record) {
+      var media = safeHttps(record.photoUrl)
+        ? photoMarkup(record.photoUrl, record.kzName + ' фотосы', true)
+        : placeholderMarkup();
+      return [
+        '<article class="tree-card">',
+          '<div class="tree-card-media">', media,
+            '<span class="card-id">', escapeHtml(record.forestId), '</span>',
+            state.mode === 'preview' ? '<span class="card-demo">ДЕМО</span>' : '<span class="card-verified" title="Оқытушы тексерген" aria-label="Тексерілген">✓</span>',
+          '</div>',
+          '<div class="tree-card-body">',
+            '<h3>', escapeHtml(record.kzName || 'Атауы көрсетілмеген'), '</h3>',
+            '<p class="scientific-name">', escapeHtml(record.scientificName || '—'), '</p>',
+            '<dl class="tree-meta">',
+              metaItem('Құрылым', record.generativeStructure),
+              metaItem('Орналасуы', record.location),
+              metaItem('Биіктігі', valueWithUnit(record.heightM, 'м')),
+              metaItem('Бақылау күні', formatHumanDate(record.studyDate)),
+            '</dl>',
+            '<button class="card-open" type="button" data-tree-id="', escapeAttribute(record.forestId), '">Паспортты ашу <span aria-hidden="true">→</span></button>',
+          '</div>',
+        '</article>'
+      ].join('');
+    }
+
+    window.ForestIdPhotoFallback = function (image) {
+      image.insertAdjacentHTML('afterend', '<div class="photo-unavailable">' + placeholderMarkup() + '<span>Фото қолжетімсіз</span></div>');
+      image.remove();
+    };
+
+    function photoMarkup(url, alt, lazy) {
+      return '<img src="' + escapeAttribute(url) + '" alt="' + escapeAttribute(alt) + '"' + (lazy ? ' loading="lazy"' : '') + ' referrerpolicy="no-referrer" onerror="window.ForestIdPhotoFallback(this)">';
+    }
+
+    function placeholderMarkup() {
+      return '<div class="tree-placeholder" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M40 8C24 20 16 32 16 47c0 14 10 24 24 24s24-10 24-24C64 32 56 20 40 8Z" fill="currentColor"/><path d="M40 22v42M40 36 28 45M40 46l13 8" fill="none" stroke="#f7f4ec" stroke-width="3" stroke-linecap="round"/></svg></div>';
+    }
+
+    function metaItem(label, value) {
+      return '<div><dt>' + escapeHtml(label) + '</dt><dd title="' + escapeAttribute(value || '—') + '">' + escapeHtml(value || '—') + '</dd></div>';
+    }
+
+    function applyCatalogFilter() {
+      var query = elements.catalogQuery.value.trim().toLocaleLowerCase();
+      var structure = elements.catalogStructure.value;
+      var records = state.records.filter(function (record) {
+        var haystack = [record.forestId, record.kzName, record.scientificName, record.family, record.location, record.academicGroup].join(' ').toLocaleLowerCase();
+        return (!query || haystack.indexOf(query) !== -1) && (!structure || record.generativeStructure === structure);
+      });
+      renderCatalog(records);
+    }
+
+    function openPassport(forestId, updateHistory) {
+      forestId = normaliseForestId(forestId);
+      var request = ++state.passportRequest;
+      showOnlyPassport();
+      elements.passportContent.innerHTML = '<div class="loading-card">Паспорт жүктелуде…</div>';
+      if (updateHistory) pushRoute(forestId, '#passport');
+      window.scrollTo(0, 0);
+      callServer('getTreePassport', forestId)
+        .then(function (record) {
+          if (request !== state.passportRequest) return;
+          record = withPassportUrl(record);
+          elements.passportContent.innerHTML = renderPassport(record);
+          document.title = record.kzName + ' | ' + record.forestId + ' | FOREST ID';
+          focusHeading(elements.passportContent);
+        })
+        .catch(function (error) {
+          if (request !== state.passportRequest) return;
+          elements.passportContent.innerHTML = '<div class="loading-card"><div><h2 style="color:#123d2e;font-size:36px">Паспорт табылмады</h2><p>' + escapeHtml(errorMessage(error)) + '</p></div></div>';
+          focusHeading(elements.passportContent);
+        });
+    }
+
+    function showOnlyPassport() {
+      document.querySelectorAll('main > section').forEach(function (section) {
+        section.hidden = section.id !== 'passport';
+      });
+      elements.passport.hidden = false;
+      closeNavigation();
+    }
+
+    function closePassport(updateHistory) {
+      exitPassport('#catalog', updateHistory);
+    }
+
+    function exitPassport(targetHash, updateHistory) {
+      ++state.passportRequest;
+      targetHash = validSectionHash(targetHash);
+      document.querySelectorAll('main > section').forEach(function (section) { section.hidden = false; });
+      elements.passport.hidden = true;
+      document.title = 'FOREST ID | Цифрлық дендрологиялық паспорттар';
+      closeNavigation();
+      if (updateHistory) pushRoute('', targetHash);
+      requestAnimationFrame(function () {
+        var target = document.getElementById(targetHash.slice(1));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+          if (updateHistory) focusHeading(target);
+        }
+      });
+    }
+
+    function renderPassport(record) {
+      var media = safeHttps(record.photoUrl)
+        ? photoMarkup(record.photoUrl, record.kzName + ' фотосы', false)
+        : placeholderMarkup();
+      var isDemo = state.mode === 'preview';
+      var passportUrl = isDemo ? '' : publicPassportUrl(record.passportUrl || buildPassportUrl(record.forestId));
+      var qr = renderQr(passportUrl, record.forestId);
+      var organPhoto = safeHttps(record.organPhotoUrl)
+        ? '<section class="organ-photo"><h4>Генеративтік мүшенің фотосуреті</h4>' + photoMarkup(record.organPhotoUrl, record.kzName + ': генеративтік мүше', true) + '</section>'
+        : '';
+      return [
+        '<div class="passport-hero">',
+          '<div class="passport-photo">', media, '</div>',
+          '<div class="passport-title">',
+            '<span class="passport-kicker"><i></i>', isDemo ? 'Демо паспорт • оқу үлгісі' : 'Тексерілген дендрологиялық паспорт', '</span>',
+            '<h2 id="passport-title">', escapeHtml(record.kzName), '</h2>',
+            '<p class="scientific-name">', escapeHtml(record.scientificName), '</p>',
+            '<div class="passport-id-row"><span class="passport-id">', escapeHtml(record.forestId), '</span><span class="passport-date">', isDemo ? 'Үлгі күні: ' : 'Жарияланды: ', escapeHtml(formatHumanDate(record.publishedAt)), '</span></div>',
+          '</div>',
+        '</div>',
+        '<div class="passport-body">',
+          '<div class="passport-data">',
+            '<h3>Зерттеу мәліметтері</h3>',
+            '<dl class="passport-grid">',
+              passportItem('Тұқымдасы', record.family),
+              passportItem('Тіршілік формасы', record.plantGroup),
+              passportItem('Орналасуы', record.location),
+              passportItem('GPS', record.gps),
+              passportItem('Биіктігі', valueWithUnit(record.heightM, 'м')),
+              passportItem('Дің диаметрі', valueWithUnit(record.dbhCm, 'см')),
+              passportItem('Генеративтік құрылымы', record.generativeStructure),
+              passportItem('Таралу тәсілі', record.dispersal),
+              passportItem('Ағаштың ені', valueWithUnit(record.treeWidthMm, 'мм')),
+              passportItem('Бақылау күні', formatHumanDate(record.studyDate)),
+              passportItem('Генеративтік мүшенің ұзындығы', valueWithUnit(record.organLengthMm, 'мм')),
+              passportItem('Генеративтік мүшенің ені', valueWithUnit(record.organWidthMm, 'мм')),
+              passportItem('Жеміс типі', record.fruitType),
+              passportItem('Фенологиялық күйі', record.phenology),
+            '</dl>',
+            '<div class="passport-prose">',
+              '<section><h4>Генеративтік мүшенің пішіні мен түсі</h4><p>', escapeHtml(record.organShapeColor || '—'), '</p></section>',
+              '<section><h4>Тұқым саны мен ерекшеліктері</h4><p>', escapeHtml(record.seedDetails || '—'), '</p></section>',
+              '<section><h4>Морфологиялық сипаттама</h4><p>', escapeHtml(record.morphology || '—'), '</p></section>',
+              '<section><h4>Қорытынды және диагностикалық белгілер</h4><p>', escapeHtml(record.conclusion || '—'), '</p></section>',
+              organPhoto,
+            '</div>',
+          '</div>',
+          '<aside class="passport-side">',
+            '<h3>QR-код</h3>',
+            '<div class="qr-box">', qr, passportUrl ? '<a href="' + escapeAttribute(passportUrl) + '" target="_blank" rel="noopener">' + escapeHtml(passportUrl) + '</a>' : '', '</div>',
+            '<div class="research-stamp">',
+              '<p>Зерттеуші<strong>', escapeHtml(record.researcher || '—'), '</strong></p>',
+              '<p>Академиялық топ<strong>', escapeHtml(record.academicGroup || '—'), '</strong></p>',
+              '<p>Күйі<strong>', isDemo ? 'Демо үлгі — оқытушы тексермеген' : 'Оқытушы тексерген', '</strong></p>',
+            '</div>',
+            '<div class="passport-actions">',
+              passportUrl ? '<button class="button button-dark" type="button" data-copy-url="' + escapeAttribute(passportUrl) + '">Сілтемені көшіру</button>' : '',
+              '<button class="button" type="button" data-print-passport style="border-color:var(--line)">Басып шығару</button>',
+            '</div>',
+          '</aside>',
+        '</div>'
+      ].join('');
+    }
+
+    function passportItem(label, value) {
+      return '<div><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value || '—') + '</dd></div>';
+    }
+
+    function renderQr(url, forestId) {
+      if (state.mode === 'preview') return '<p>Демо нұсқада QR және ортақ сілтеме жасалмайды. Жарияланған сайтта олар нақты паспортқа апарады.</p>';
+      if (!url) return '<p>QR жасау үшін жарияланған сайттың тұрақты сілтемесін баптаңыз.</p>';
+      if (typeof window.qrcode !== 'function') return '<p>QR-код жүктелмеді. Паспорт сілтемесін төменнен ашуға болады.</p>';
+      try {
+        var qr = window.qrcode(0, 'M');
+        qr.addData(url);
+        qr.make();
+        return '<div role="img" aria-label="' + escapeAttribute(forestId + ' паспортына апаратын QR-код') + '">' + qr.createSvgTag({ cellSize: 4, margin: 16, scalable: true }) + '</div>';
+      } catch (error) {
+        return '<p>QR-код жасалмады. Паспорт сілтемесін төменнен ашуға болады.</p>';
+      }
+    }
+
+    function submitForm(event) {
+      event.preventDefault();
+      if (state.submitting) return;
+      elements.formError.hidden = true;
+      elements.treeForm.querySelectorAll('[required]').forEach(function (field) {
+        field.setCustomValidity(String(field.value || '').trim() ? '' : 'Міндетті өрісті толтырыңыз.');
+      });
+      var gps = elements.treeForm.elements.gps;
+      var coordinates = gps.value.trim().split(',').map(function (value) { return value.trim(); });
+      var validGps = !gps.value.trim() || (coordinates.length === 2 && coordinates.every(function (value) { return /^[-+]?\d+(?:\.\d+)?$/.test(value); }) && Math.abs(Number(coordinates[0])) <= 90 && Math.abs(Number(coordinates[1])) <= 180);
+      gps.setCustomValidity(validGps ? '' : 'GPS мәнін ендік, бойлық түрінде енгізіңіз. Мысалы: 43.238949, 76.889709.');
+      if (!elements.treeForm.reportValidity()) return;
+
+      var payload = {};
+      new FormData(elements.treeForm).forEach(function (value, key) { payload[key] = value; });
+      payload.requestId = submissionId(payload);
+      setSubmitting(true);
+      callServer('submitTree', payload)
+        .then(function (result) {
+          if (!result || !result.ok || !/^FOREST-\d{5,8}$/.test(String(result.forestId || ''))) throw new Error('Сақтау нәтижесі расталмады.');
+          setSubmitting(false);
+          clearSubmission();
+          elements.treeForm.hidden = true;
+          document.getElementById('success-id').textContent = result.forestId;
+          document.getElementById('success-message').textContent = result.message || 'Жазба оқытушының тексеруіне жіберілді.';
+          elements.successPanel.hidden = false;
+          elements.successPanel.focus();
+          showToast(result.forestId + ' нөмірі берілді');
+        })
+        .catch(function (error) {
+          setSubmitting(false);
+          elements.formError.textContent = errorMessage(error) + ' Сақтау расталмады. Қайта жіберу үшін мәліметтерді өзгертпей осы батырманы басыңыз: сұрау нөмірі сақталады.';
+          elements.formError.hidden = false;
+          elements.formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    }
+
+    function setSubmitting(isSubmitting) {
+      state.submitting = isSubmitting;
+      Array.from(elements.treeForm.elements).forEach(function (field) { field.disabled = isSubmitting; });
+      elements.submitButton.disabled = isSubmitting;
+      elements.submitButton.querySelector('span').textContent = isSubmitting ? 'Сақталуда…' : 'Зерттеуді жіберу';
+    }
+
+    function submissionId(payload) {
+      var signature = JSON.stringify(payload);
+      if (!state.submission) {
+        try { state.submission = JSON.parse(sessionStorage.getItem('forest-id-pending-request') || 'null'); } catch (error) { state.submission = null; }
+      }
+      if (!state.submission || state.submission.signature !== signature) {
+        var id = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : 'req-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2) + '-' + Math.random().toString(36).slice(2);
+        state.submission = { signature: signature, requestId: id };
+        try { sessionStorage.setItem('forest-id-pending-request', JSON.stringify(state.submission)); } catch (error) { /* Current-tab retries still retain their ID in memory. */ }
+      }
+      return state.submission.requestId;
+    }
+
+    function clearSubmission() {
+      state.submission = null;
+      try { sessionStorage.removeItem('forest-id-pending-request'); } catch (error) { /* Storage may be unavailable in an embedded browser. */ }
+    }
+
+    function updateFormProgress() {
+      var fields = Array.from(elements.treeForm.querySelectorAll('input:not([name="website"]), select, textarea'));
+      var filled = fields.filter(function (field) { return String(field.value || '').trim(); }).length;
+      var progress = Math.max(8, Math.round((filled / fields.length) * 100));
+      elements.progressBar.style.width = progress + '%';
+    }
+
+    function fillLocation() {
+      var button = document.getElementById('locate-button');
+      if (!navigator.geolocation) {
+        showToast('GPS бұл браузерде қолдаусыз.');
+        return;
+      }
+      button.disabled = true;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        elements.treeForm.elements.gps.value = position.coords.latitude.toFixed(6) + ', ' + position.coords.longitude.toFixed(6);
+        button.disabled = false;
+        updateFormProgress();
+        showToast('GPS координаттары толтырылды.');
+      }, function () {
+        button.disabled = false;
+        showToast('Орналасуды анықтауға рұқсат берілмеді.');
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+    }
+
+    function callServer(method, argument) {
+      if (publicMethods.indexOf(method) === -1) return Promise.reject(new Error('Бұл әрекетке рұқсат жоқ.'));
+      if (hasExternalRuntime) return httpCall(method, argument);
+      if (usesAppsScriptBridge()) {
+        return new Promise(function (resolve, reject) {
+          var runner = window.google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject);
+          if (typeof argument === 'undefined') runner[method]();
+          else runner[method](argument);
+        });
+      }
+      if (state.mode !== 'preview') return Promise.reject(new Error('Деректер серверімен байланыс жоғалды. Бетті қайта жүктеңіз.'));
+      return mockCall(method, argument);
+    }
+
+    function externalRuntime() {
+      var runtime = window.FOREST_ID_RUNTIME;
+      if (!runtime || runtime.mode !== 'production') throw new Error('Сайттың production баптаулары дұрыс емес.');
+      var api;
+      var site;
+      try {
+        api = new URL(runtime.apiUrl);
+        site = new URL(runtime.siteUrl);
+      } catch (error) {
+        throw new Error('Сайт пен деректер серверінің мекенжайларын тексеріңіз.');
+      }
+      if (api.protocol !== 'https:' || api.hostname !== 'script.google.com' || api.port || api.username || api.password || api.search || api.hash || !/^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(api.pathname)) {
+        throw new Error('Деректер серверінің HTTPS /exec мекенжайы дұрыс емес.');
+      }
+      if (site.protocol !== 'https:' || !/^[a-z0-9-]+\.github\.io$/.test(site.hostname) || site.port || site.username || site.password || site.search || site.hash || !/^\/(?:[A-Za-z0-9_.-]+\/?)*$/.test(site.pathname)) {
+        throw new Error('GitHub Pages сайтының HTTPS мекенжайы дұрыс емес.');
+      }
+      if (site.pathname.slice(-1) !== '/') site.pathname += '/';
+      return { apiUrl: api.toString(), siteUrl: site.toString() };
+    }
+
+    function httpCall(method, argument) {
+      var runtime;
+      try { runtime = externalRuntime(); } catch (error) { return Promise.reject(error); }
+      if (typeof window.fetch !== 'function' || typeof window.AbortController !== 'function') return Promise.reject(new Error('Браузерді жаңартып, қайта көріңіз.'));
+      var controller = new window.AbortController();
+      var options = { credentials: 'omit', redirect: 'follow', signal: controller.signal };
+      var url = new URL(runtime.apiUrl);
+      if (method === 'submitTree') {
+        options.method = 'POST';
+        options.headers = { 'Content-Type': 'text/plain;charset=UTF-8' };
+        options.body = JSON.stringify({ method: method, argument: argument });
+      } else {
+        options.method = 'GET';
+        url.searchParams.set('action', method);
+        if (method === 'getTreePassport') url.searchParams.set('forestId', String(argument || ''));
+        if (method === 'getCatalog') {
+          url.searchParams.set('query', String(argument && argument.query || ''));
+          url.searchParams.set('structure', String(argument && argument.structure || ''));
+        }
+      }
+      var timeout = window.setTimeout(function () { controller.abort(); }, 45000);
+      return window.fetch(url.toString(), options)
+        .then(function (response) {
+          if (!response.ok) throw new Error('Деректер сервері HTTP ' + response.status + ' қатесін қайтарды. Қайта көріңіз.');
+          return response.json().catch(function () { throw new Error('Деректер серверінің жауабы дұрыс емес. Қайта көріңіз.'); });
+        })
+        .then(function (envelope) {
+          if (!envelope || typeof envelope !== 'object' || Array.isArray(envelope)) throw new Error('Деректер серверінің жауабы дұрыс емес.');
+          if (envelope.ok === false) throw new Error(typeof envelope.error === 'string' ? envelope.error : 'Сервер әрекетті орындай алмады.');
+          if (envelope.ok !== true || !Object.prototype.hasOwnProperty.call(envelope, 'data')) throw new Error('Деректер серверінің жауабы расталмады.');
+          return envelope.data;
+        })
+        .catch(function (error) {
+          if (error && error.name === 'AbortError') throw new Error('Сервердің жауабын күту уақыты аяқталды. Қайта көріңіз.');
+          if (error && error.name === 'TypeError') throw new Error('Деректер серверіне қосылу мүмкін болмады. Интернет қосылымын тексеріп, қайта көріңіз.');
+          throw error;
+        })
+        .finally(function () { window.clearTimeout(timeout); });
+    }
+
+    function mockCall(method, argument) {
+      return new Promise(function (resolve, reject) {
+        window.setTimeout(function () {
+          try {
+            if (method === 'getBootstrapData') {
+              var records = demoRecords.map(withPassportUrl);
+              resolve({ config: state.config, records: records, stats: calculateStats(records) });
+              return;
+            }
+            if (method === 'getTreePassport') {
+              var id = normaliseForestId(argument);
+              var found = demoRecords.find(function (record) { return record.forestId === id; });
+              if (!found) throw new Error('Жарияланған паспорт табылмады.');
+              resolve(withPassportUrl(found));
+              return;
+            }
+            if (method === 'submitTree') {
+              var submissions = JSON.parse(localStorage.getItem('forest-id-demo-submissions') || '[]');
+              var existing = submissions.find(function (submission) { return argument.requestId && submission.requestId === argument.requestId; });
+              if (existing) {
+                resolve({ ok: true, forestId: existing.forestId, status: existing.status, message: 'Демо жазбасы осы браузерде бұрын сақталған. Оқытушыға жіберілген жоқ.' });
+                return;
+              }
+              var number = Number(localStorage.getItem('forest-id-demo-sequence') || 3) + 1;
+              localStorage.setItem('forest-id-demo-sequence', String(number));
+              var forestId = 'FOREST-' + String(number).padStart(5, '0');
+              submissions.push(Object.assign({}, argument, { forestId: forestId, status: 'ҚАРАЛУДА' }));
+              localStorage.setItem('forest-id-demo-submissions', JSON.stringify(submissions));
+              resolve({ ok: true, forestId: forestId, status: 'ҚАРАЛУДА', message: 'Демо жазбасы тек осы браузерде сақталды. Оқытушыға жіберілген жоқ.' });
+              return;
+            }
+            throw new Error('Белгісіз функция: ' + method);
+          } catch (error) {
+            reject(error);
+          }
+        }, method === 'submitTree' ? 700 : 180);
+      });
+    }
+
+    function hasAppsScriptBridge() {
+      return Boolean(window.google && window.google.script && window.google.script.run);
+    }
+
+    function usesAppsScriptBridge() {
+      return !hasExternalRuntime && hasAppsScriptBridge();
+    }
+
+    function withPassportUrl(record) {
+      var copy = Object.assign({}, record);
+      copy.passportUrl = hasExternalRuntime ? buildPassportUrl(copy.forestId) : copy.passportUrl || buildPassportUrl(copy.forestId);
+      return copy;
+    }
+
+    function buildPassportUrl(forestId) {
+      try {
+        var base = hasExternalRuntime ? externalRuntime().siteUrl : state.config.appUrl || (state.mode === 'preview' ? window.location.origin + window.location.pathname : '');
+        if (!base) return '';
+        var url = new URL(base);
+        url.searchParams.set('tree', forestId);
+        url.hash = '';
+        return url.toString();
+      } catch (error) { return ''; }
+    }
+
+    function publicPassportUrl(value) {
+      try {
+        var url = new URL(value);
+        if (hasExternalRuntime) {
+          var site = new URL(externalRuntime().siteUrl);
+          if (url.origin !== site.origin || url.pathname !== site.pathname || url.username || url.password || url.hash || Array.from(url.searchParams.keys()).join(',') !== 'tree' || !/^FOREST-\d{5,8}$/.test(url.searchParams.get('tree'))) return '';
+          return url.toString();
+        }
+        if (url.protocol !== 'https:' || url.hostname !== 'script.google.com' || !/\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname)) return '';
+        return url.toString();
+      } catch (error) { return ''; }
+    }
+
+    function calculateStats(records) {
+      return {
+        published: records.length,
+        species: new Set(records.map(function (r) { return String(r.scientificName || '').toLocaleLowerCase(); }).filter(Boolean)).size,
+        groups: new Set(records.map(function (r) { return String(r.academicGroup || '').toLocaleLowerCase(); }).filter(Boolean)).size
+      };
+    }
+
+    function animateNumber(element, target) {
+      if (!element) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = String(target);
+        return;
+      }
+      var started = performance.now();
+      var duration = 650;
+      function frame(now) {
+        var progress = Math.min(1, (now - started) / duration);
+        element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function showToast(message) {
+      elements.toast.textContent = message;
+      elements.toast.hidden = false;
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(function () { elements.toast.hidden = true; }, 3500);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { showToast('Сілтеме көшірілді.'); }).catch(function () { showToast('Көшіру мүмкін болмады. Сілтемені қолмен таңдаңыз.'); });
+        return;
+      }
+      var area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      var copied = document.execCommand('copy');
+      area.remove();
+      showToast(copied ? 'Сілтеме көшірілді.' : 'Көшіру мүмкін болмады. Сілтемені қолмен таңдаңыз.');
+    }
+
+    function formatHumanDate(value) {
+      if (!value) return '—';
+      var date = new Date(value);
+      if (isNaN(date.getTime())) return String(value);
+      var months = ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'];
+      return date.getUTCDate() + ' ' + months[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
+    }
+
+    function valueWithUnit(value, unit) {
+      return value === '' || value == null ? '—' : String(value) + ' ' + unit;
+    }
+
+    function safeHttps(value) {
+      try {
+        var url = new URL(String(value || ''));
+        return url.protocol === 'https:' && !url.username && !url.password ? url.toString() : '';
+      } catch (error) { return ''; }
+    }
+
+    function normaliseForestId(value) {
+      var id = String(value || '').trim().toUpperCase();
+      var match = id.match(/^(?:FOREST-?)?(\d{1,8})$/);
+      return match ? 'FOREST-' + String(Number(match[1])).padStart(5, '0') : id;
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value).replace(/[&<>'"]/g, function (character) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character];
+      });
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;');
+    }
+
+    function errorMessage(error) {
+      return error && error.message ? error.message : String(error || 'Белгісіз қате');
+    }
+
+    function debounce(fn, delay) {
+      var timer;
+      return function () {
+        var args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () { fn.apply(null, args); }, delay);
+      };
+    }
+  }());
+</script>

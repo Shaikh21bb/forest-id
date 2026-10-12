@@ -1,0 +1,14 @@
+{
+  "name": "forest-id",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-preview.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
+    "test": "node scripts/build-preview.mjs && node scripts/test.mjs",
+    "test:http": "node scripts/test-http.mjs",
+    "test:pages": "node --test scripts/test-pages.mjs",
+    "serve": "python3 -m http.server 4173 --directory dist"
+  }
+}

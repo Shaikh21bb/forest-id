@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#123d2e">
+    <meta name="description" content="FOREST ID — ағаштар мен бұталардың тексерілген цифрлық паспорттары">
+    <title>FOREST ID | Цифрлық дендрологиялық паспорттар</title>
+    <?!= include_('Styles'); ?>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Негізгі мазмұнға өту</a>
+    <div class="demo-banner" id="demo-banner" role="note" hidden>
+      <div class="shell"><strong>Демо нұсқа</strong><span>Каталогтағы жазбалар — оқу үлгілері, нақты тексерілген зерттеулер емес. Форма тек осы браузерде сақталады.</span></div>
+    </div>
+
+    <header class="site-header" id="top">
+      <div class="shell header-inner">
+        <a class="brand" href="#home" aria-label="FOREST ID басты беті">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img">
+              <path d="M24 5c-8 6-13 12-13 20 0 7 5 13 13 18 8-5 13-11 13-18 0-8-5-14-13-20Z" fill="currentColor"/>
+              <path d="M24 12v28M24 20l-7 6M24 25l8 6" fill="none" stroke="#f7f4ec" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>
+            <strong>FOREST ID</strong>
+            <small>Ғылыми далалық зерттеу</small>
+          </span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+          <span></span><span></span><span></span>
+          <span class="sr-only">Мәзірді ашу</span>
+        </button>
+
+        <nav class="main-nav" id="main-nav" aria-label="Негізгі навигация">
+          <a href="#home">Басты бет</a>
+          <a href="#catalog">Каталог</a>
+          <a href="#register">Ағаш тіркеу</a>
+          <a class="nav-search" href="#catalog" aria-label="Каталогтан іздеу">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home" aria-labelledby="hero-title">
+        <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+        <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy reveal">
+            <p class="eyebrow">Оқу және зерттеу жобасы</p>
+            <h1 id="hero-title">Әр ағаштың<br><em>өз тарихы бар</em></h1>
+            <p class="hero-lead">Агробиологиялық ғылыми-зерттеу орталығындағы ағаштар мен бұталардың тексерілген цифрлық паспорттары.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#catalog">Каталогты ашу <span aria-hidden="true">→</span></a>
+              <a class="text-link" href="#register">Зерттеуді енгізу</a>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal reveal-delay" aria-label="FOREST ID зерттеу үдерісі">
+            <div class="tree-rings" aria-hidden="true">
+              <span class="ring ring-one"></span>
+              <span class="ring ring-two"></span>
+              <span class="ring ring-three"></span>
+              <span class="ring-center">
+                <svg viewBox="0 0 56 56"><path d="M28 7C17 15 11 23 11 33c0 9 7 16 17 16s17-7 17-16C45 23 39 15 28 7Z" fill="currentColor"/><path d="M28 17v28M28 27l-8 6M28 33l9 5" fill="none" stroke="#f7f4ec" stroke-width="2.6" stroke-linecap="round"/></svg>
+              </span>
+            </div>
+            <div class="specimen-tag">
+              <span class="specimen-label">FOREST ID</span>
+              <strong>FOREST—<span id="hero-id">00001</span></strong>
+              <span class="specimen-rule"></span>
+              <p>Бақылау • Тексеру • Жариялау</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="shell stats-row" aria-label="Жоба статистикасы">
+          <div><strong id="stat-published">0</strong><span id="stat-published-label">Жарияланған паспорт</span></div>
+          <div><strong id="stat-species">0</strong><span id="stat-species-label">Зерттелген түр</span></div>
+          <div><strong id="stat-groups">0</strong><span id="stat-groups-label">Зерттеуші топ</span></div>
+          <p class="stats-note"><span></span>Мәліметтер оқытушы тексергеннен кейін ғана жарияланады</p>
+        </div>
+      </section>
+
+      <section class="process-section" aria-labelledby="process-title">
+        <div class="shell">
+          <div class="section-heading compact reveal">
+            <p class="eyebrow">Зерттеу үдерісі</p>
+            <h2 id="process-title">Даладағы бақылаудан цифрлық паспортқа дейін</h2>
+          </div>
+          <ol class="process-grid">
+            <li class="reveal"><span>01</span><strong>Бақылау</strong><p>Өсімдікті далада зерттеп, өлшемдер мен белгілерді тіркеңіз.</p></li>
+            <li class="reveal"><span>02</span><strong>Енгізу</strong><p>Атауы, GPS, фото және морфологиялық сипаттаманы формаға енгізіңіз.</p></li>
+            <li class="reveal"><span>03</span><strong>Тексеру</strong><p>Оқытушы ғылыми атаулар мен өлшемдердің дұрыстығын растайды.</p></li>
+            <li class="reveal"><span>04</span><strong>Жариялау</strong><p>Жеке FOREST ID, ашық паспорт және оған апаратын QR-код жасалады.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+        <div class="shell">
+          <div class="section-heading split reveal">
+            <div>
+              <p class="eyebrow" id="catalog-kicker">Тексерілген жазбалар</p>
+              <h2 id="catalog-title">Ағаштар мен бұталар каталогы</h2>
+            </div>
+            <p id="catalog-description">Әр карточка оқытушы тексерген ғылыми жазбаға апарады.</p>
+          </div>
+
+          <form class="catalog-tools reveal" id="catalog-filter" role="search">
+            <label class="search-field">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+              <span class="sr-only">Іздеу</span>
+              <input id="catalog-query" type="search" placeholder="Атауы немесе FOREST ID бойынша іздеу">
+            </label>
+            <label class="select-field">
+              <span class="sr-only">Генеративтік құрылым</span>
+              <select id="catalog-structure">
+                <option value="">Барлық құрылым</option>
+                <option value="Гүл">Гүл</option>
+                <option value="Жеміс">Жеміс</option>
+                <option value="Тұқым">Тұқым</option>
+                <option value="Бүр">Бүр</option>
+                <option value="Бірнеше құрылым">Бірнеше құрылым</option>
+              </select>
+            </label>
+            <button class="button button-dark" type="submit">Іздеу</button>
+          </form>
+
+          <div class="catalog-meta">
+            <span id="catalog-count">Жазбалар жүктелуде…</span>
+            <span class="verified-key" id="catalog-key"><i aria-hidden="true"></i>Тексерілген</span>
+          </div>
+          <div class="catalog-grid" id="catalog-grid" aria-live="polite"></div>
+          <div class="empty-state" id="catalog-empty" hidden>
+            <span aria-hidden="true">⌁</span>
+            <h3>Жазба табылмады</h3>
+            <p>Іздеу сұрауын өзгертіп көріңіз.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="passport-section" id="passport" aria-labelledby="passport-title" hidden>
+        <div class="shell">
+          <button class="back-button" id="passport-back" type="button"><span aria-hidden="true">←</span> Каталогқа оралу</button>
+          <article class="passport" id="passport-content">
+            <div class="loading-card">Паспорт жүктелуде…</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="register-section" id="register" aria-labelledby="register-title">
+        <div class="shell register-grid">
+          <div class="register-intro reveal">
+            <p class="eyebrow">Далалық зерттеу</p>
+            <h2 id="register-title">Ағашты тіркеу</h2>
+            <p>Міндетті өрістерді толтырып, далалық бақылау нәтижелерін жіберіңіз. FOREST ID нөмірі автоматты түрде беріледі.</p>
+            <div class="register-principles">
+              <div><span>01</span><p><strong>Нақты өлшем</strong>Өлшеу бірліктерін тексеріңіз.</p></div>
+              <div><span>02</span><p><strong>Ғылыми атау</strong>Латынша атауды анықтағышпен салыстырыңыз.</p></div>
+              <div><span>03</span><p><strong>Сапалы фото</strong>Ағаш пен генеративтік мүшені анық көрсетіңіз.</p></div>
+            </div>
+          </div>
+
+          <div class="form-card reveal reveal-delay">
+            <form id="tree-form" novalidate>
+              <div class="form-progress" aria-hidden="true"><span id="form-progress-bar"></span></div>
+              <div class="form-head">
+                <span class="step-badge">FOREST ID</span>
+                <p><strong>Жаңа зерттеу</strong><span><b>*</b> міндетті өрістер</span></p>
+              </div>
+
+              <fieldset>
+                <legend><span>1</span>Зерттеуші және өсімдік</legend>
+                <div class="field-grid two">
+                  <label class="field"><span>Зерттеуші(лер) <b>*</b></span><input name="researcher" required maxlength="160" autocomplete="name" placeholder="Аты-жөні"></label>
+                  <label class="field"><span>Академиялық топ</span><input name="academicGroup" maxlength="80" placeholder="Мысалы: БИО-101"></label>
+                  <label class="field"><span>Қазақша атауы <b>*</b></span><input name="kzName" required maxlength="120" placeholder="Мысалы: Ақ қайың"></label>
+                  <label class="field"><span>Ғылыми атауы <b>*</b></span><input name="scientificName" required maxlength="180" placeholder="Betula pendula Roth" autocapitalize="off" spellcheck="false"></label>
+                  <label class="field"><span>Тұқымдасы</span><input name="family" maxlength="120" placeholder="Betulaceae"></label>
+                  <label class="field"><span>Өсімдік тобы</span><select name="plantGroup"><option value="">Таңдаңыз</option><option>Ағаш</option><option>Бұта</option><option>Басқа</option></select></label>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend><span>2</span>Морфологиялық бақылау</legend>
+                <div class="field-grid two">
+                  <label class="field"><span>Генеративтік құрылым <b>*</b></span><select name="generativeStructure" required><option value="">Таңдаңыз</option><option>Гүл</option><option>Жеміс</option><option>Тұқым</option><option>Бүр</option><option>Бірнеше құрылым</option></select></label>
+                  <label class="field"><span>Таралу тәсілі</span><select name="dispersal"><option value="">Таңдаңыз</option><option>Жел</option><option>Жануар</option><option>Су</option><option>Басқа</option><option>Анықталмаған</option></select></label>
+                  <label class="field"><span>Ағаштың ені, мм</span><input name="treeWidthMm" type="number" min="0" max="100000" step="0.1" inputmode="decimal" placeholder="0"></label>
+                  <label class="field"><span>Ағаш биіктігі, м</span><input name="heightM" type="number" min="0" max="150" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+                  <label class="field"><span>Дің диаметрі (1,3 м), см</span><input name="dbhCm" type="number" min="0" max="1500" step="0.1" inputmode="decimal" placeholder="0.0"></label>
+                  <label class="field"><span>Зерттеу күні</span><input name="studyDate" type="date"></label>
+                  <label class="field"><span>Генеративтік мүшенің ұзындығы, мм</span><input name="organLengthMm" type="number" min="0" max="100000" step="0.1" inputmode="decimal" placeholder="0.0"></label>
+                  <label class="field"><span>Генеративтік мүшенің ені, мм</span><input name="organWidthMm" type="number" min="0" max="100000" step="0.1" inputmode="decimal" placeholder="0.0"></label>
+                  <label class="field"><span>Жеміс типі</span><input name="fruitType" maxlength="160" placeholder="Мысалы: жаңғақша, жидек"></label>
+                  <label class="field"><span>Фенологиялық күйі</span><input name="phenology" maxlength="300" placeholder="Мысалы: гүлдеу, жемістің пісуі"></label>
+                </div>
+                <label class="field full"><span>Генеративтік мүшенің пішіні мен түсі</span><textarea name="organShapeColor" maxlength="1000" rows="3" placeholder="Бақыланған пішіні мен түсін сипаттаңыз"></textarea></label>
+                <label class="field full"><span>Тұқым саны мен ерекшеліктері</span><textarea name="seedDetails" maxlength="1000" rows="3" placeholder="Тұқымның саны, пішіні, түсі және басқа белгілері"></textarea></label>
+                <label class="field full"><span>Генеративтік мүшенің морфологиялық сипаттамасы <b>*</b></span><textarea name="morphology" required maxlength="3000" rows="5" placeholder="Бақылаудың толық сипаттамасы және диагностикалық белгілері"></textarea></label>
+                <label class="field full"><span>Ғылыми қорытынды</span><textarea name="conclusion" maxlength="2000" rows="4" placeholder="Түрді анықтауға мүмкіндік берген негізгі белгілер"></textarea></label>
+              </fieldset>
+
+              <fieldset>
+                <legend><span>3</span>Орналасуы және фото</legend>
+                <div class="field-grid two">
+                  <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
+                  <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
+                  <label class="field full-span"><span>Ағаштың фотосуреті (HTTPS сілтемесі)</span><input name="photoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Ағаштың жалпы көрінісі бар ашық сурет сілтемесі.</small></label>
+                  <label class="field full-span"><span>Генеративтік мүшенің фотосуреті (HTTPS сілтемесі)</span><input name="organPhotoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Гүл, жеміс, тұқым немесе бүр анық көрінетін ашық сурет сілтемесі.</small></label>
+                </div>
+                <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+              </fieldset>
+
+              <div class="form-error" id="form-error" role="alert" hidden></div>
+              <button class="button button-submit" id="submit-button" type="submit"><span>Зерттеуді жіберу</span><i aria-hidden="true">→</i></button>
+              <p class="form-footnote">Жіберу арқылы енгізілген мәліметтердің далалық бақылауға сәйкес екенін растайсыз.</p>
+            </form>
+
+            <div class="success-panel" id="success-panel" hidden tabindex="-1">
+              <div class="success-mark" aria-hidden="true">✓</div>
+              <p class="eyebrow" id="success-kicker">Мәлімет сақталды</p>
+              <h3 id="success-id">FOREST-00000</h3>
+              <p id="success-message">Жазба оқытушының тексеруіне жіберілді.</p>
+              <div class="success-actions">
+                <button class="button button-dark" id="new-record-button" type="button">Жаңа жазба енгізу</button>
+                <a class="text-link" href="#catalog">Каталогқа өту</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">⌁</span><span><strong>FOREST ID</strong><small>Цифрлық дендрологиялық паспорттар</small></span></a></div>
+        <p id="footer-organization">Агробиологиялық ғылыми-зерттеу орталығы</p>
+        <div class="footer-links"><a href="#catalog">Каталог</a><a href="#register">Ағаш тіркеу</a><a href="#top">Жоғарыға ↑</a></div>
+      </div>
+      <div class="shell footer-bottom"><span>Орман ботаникасы • Далалық морфологиялық зерттеу</span><span id="app-mode">Деректер жүктелуде…</span></div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script>
+      window.__INITIAL_TREE_ID__ = <?!= initialTreeId ?>;
+      window.__APP_VERSION__ = <?!= appVersion ?>;
+    </script>
+    <?!= include_('QRCode'); ?>
+    <?!= include_('JavaScript'); ?>
+  </body>
+</html>
