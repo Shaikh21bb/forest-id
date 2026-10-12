@@ -92,7 +92,9 @@ check('GET bootstrap uses JSON envelope and does not expose private configuratio
   properties.set('SPREADSHEET_ID', 'PRIVATE-ID');
   const output = get('getBootstrapData');
   assert.equal(output.ok, true);
-  assert.equal(output.data.version, '1.2.0');
+  assert.equal(output.data.version, '1.3.0');
+  assert.equal(output.data.config.photoUploadsEnabled, false);
+  assert.equal(output.data.config.maxPhotoBytes, 768000);
   assert.equal(output.data.stats.published, 0);
   assert.doesNotMatch(JSON.stringify(output), /PRIVATE-ID|SPREADSHEET_ID/);
 });
@@ -130,7 +132,7 @@ check('HTTP cannot invoke admin functions or mutations through GET', () => {
     assert.equal(post(payload, method).ok, false, `POST must deny ${method}`);
   }
   assert.equal(get('submitTree').ok, false);
-  for (const method of ['getBootstrapData', 'getCatalog', 'getTreePassport']) assert.equal(post(payload, method).ok, false);
+  for (const method of ['getBootstrapData', 'getCatalog', 'getTreePassport', 'getTreePhoto']) assert.equal(post(payload, method).ok, false);
   assert.equal(JSON.stringify(rows), before);
 });
 check('malformed or oversized JSON and wrong MIME types cannot write', () => {
@@ -141,8 +143,8 @@ check('malformed or oversized JSON and wrong MIME types cannot write', () => {
     { postData: { type: 'text/plain', contents: '{invalid}' } },
     { postData: { type: 'text/plain', contents: 'null' } },
     { postData: { type: 'text/plain', contents: '[]' } },
-    { postData: { type: 'text/plain', contents: 'x'.repeat(65537) } },
-    { postData: { type: 'text/plain', contents: 'қ'.repeat(33000) } },
+    { postData: { type: 'text/plain', contents: 'x'.repeat(2200001) } },
+    { postData: { type: 'text/plain', contents: 'қ'.repeat(1100001) } },
     { postData: { type: 'text/plain', contents: JSON.stringify({ method: 'submitTree', argument: payload, admin: true }) } },
     { postData: { type: 'text/plain', contents: '{"method":"submitTree","argument":{},"__proto__":{}}' } },
   ];
@@ -191,6 +193,6 @@ check('FRONTEND_URL canonicalizes a GitHub Pages project for bootstrap and passp
 });
 check('all newly introduced helper functions remain private', () => {
   const names = [...source.matchAll(/^function (\w+)\(/gm)].map(match => match[1]).filter(name => !name.endsWith('_'));
-  assert.deepEqual(names.sort(), ['doGet', 'doPost', 'getBootstrapData', 'getCatalog', 'getTreePassport', 'onOpen', 'submitTree'].sort());
+  assert.deepEqual(names.sort(), ['doGet', 'doPost', 'getBootstrapData', 'getCatalog', 'getTreePassport', 'getTreePhoto', 'onOpen', 'submitTree'].sort());
 });
 process.stdout.write(`All ${checks} HTTP API checks passed. Local mocks only; real Google CORS and redirects require browser verification.\n`);

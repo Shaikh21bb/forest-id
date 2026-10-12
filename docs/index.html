@@ -215,6 +215,12 @@
   .card-demo { position: absolute; z-index: 2; right: 14px; top: 14px; padding: 5px 9px; color: #59451f; background: #f0dfb6; border-radius: 6px; font-size: 10px; font-weight: 850; letter-spacing: .08em; }
   .photo-unavailable { position: relative; height: 100%; min-height: 220px; }
   .photo-unavailable > span { position: absolute; inset: 55% 20px auto; color: var(--white); font-size: 12px; text-align: center; }
+  .managed-photo { position: relative; width: 100%; height: 100%; min-height: inherit; overflow: hidden; color: var(--white); background: var(--forest-900); }
+  .managed-photo > .tree-placeholder { position: absolute; inset: 0; }
+  .managed-photo > .tree-placeholder svg { width: 60px; transform: translateY(-25px); opacity: .35; }
+  .managed-photo > img { width: 100%; height: 100%; object-fit: cover; }
+  .managed-photo > [data-photo-message] { position: absolute; z-index: 1; inset: 46% 14px auto; color: var(--white); font-size: 11px; line-height: 1.5; text-align: center; }
+  .managed-photo > [data-photo-retry] { position: absolute; z-index: 1; top: 65%; left: 50%; transform: translateX(-50%); min-height: 38px; max-width: calc(100% - 32px); padding: 8px 14px; border: 1px solid rgba(255,255,255,.55); border-radius: 7px; color: var(--white); background: var(--forest-950); font-size: 11px; cursor: pointer; }
   .tree-card-body { padding: 22px; }
   .tree-card-body h3 { margin: 0; color: var(--forest-950); font-family: Georgia, serif; font-size: 25px; font-weight: 500; }
   .scientific-name { margin: 4px 0 18px; color: var(--forest-600); font-family: Georgia, serif; font-size: 14px; font-style: italic; }
@@ -228,6 +234,23 @@
   .empty-state > span { display: block; color: var(--sage-300); font-size: 58px; }
   .empty-state h3 { margin: 10px 0 5px; font-family: Georgia, serif; font-size: 27px; }
   .empty-state p { margin: 0; color: var(--muted); }
+
+  .qr-generator-section { padding: 105px 0; border-top: 1px solid var(--line); background: var(--sage-100); }
+  .qr-generator-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); align-items: start; gap: 80px; }
+  .qr-intro { margin: 24px 0 0; color: #4f6059; font-size: 15px; }
+  .qr-privacy-note { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  .qr-generator-card { min-width: 0; padding: 30px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  #qr-generator-form > .button { width: 100%; margin-top: 20px; }
+  #qr-generate-button:disabled { opacity: .7; cursor: wait; transform: none; }
+  .qr-generator-status { margin: 14px 0 0; color: var(--muted); font-size: 12px; }
+  .qr-generator-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); text-align: center; }
+  .qr-generator-image { width: min(100%, 280px); margin-inline: auto; color: #000; background: #fff; }
+  .qr-generator-image svg, .qr-generator-image img { display: block; width: 100%; height: auto; }
+  #qr-target-link { display: block; margin-top: 14px; color: var(--forest-700); font-size: 11px; overflow-wrap: anywhere; }
+  .qr-download-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+  .qr-download-actions .button { min-height: 44px; padding: 10px 17px; font-size: 12px; }
+  .qr-download-svg { color: var(--forest-800); border-color: var(--line); background: var(--sage-100); }
+  .qr-download-help { margin: 16px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 
   .passport-section { min-height: 70vh; padding: 108px 0 120px; background: var(--white); }
   .back-button { margin-bottom: 26px; padding: 0; border: 0; color: var(--forest-700); background: transparent; font-size: 13px; font-weight: 800; cursor: pointer; }
@@ -256,6 +279,8 @@
   .passport-prose h4 { margin: 0 0 8px; color: var(--forest-800); font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
   .passport-prose p { margin: 0; color: #4f6059; white-space: pre-line; }
   .organ-photo img { width: 100%; max-height: 420px; object-fit: contain; border-radius: var(--radius-sm); background: var(--white); }
+  .organ-photo .managed-photo { height: auto; min-height: 240px; max-height: 420px; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); }
+  .organ-photo .managed-photo > img { height: 100%; object-fit: contain; }
   .passport-side { padding-left: 40px; border-left: 1px solid var(--line); }
   .qr-box { padding: 20px; border-radius: var(--radius-md); background: var(--white); text-align: center; }
   .qr-box img { width: 220px; max-width: 100%; margin: 0 auto; }
@@ -265,8 +290,9 @@
   .research-stamp { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
   .research-stamp p { margin: 0 0 14px; color: var(--muted); font-size: 12px; }
   .research-stamp strong { display: block; color: var(--ink); }
-  .passport-actions { display: flex; gap: 10px; margin-top: 24px; }
-  .passport-actions .button { min-height: 42px; padding: 9px 15px; font-size: 11px; }
+  .passport-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .passport-actions .button { min-height: 42px; padding: 9px 15px; border-color: var(--line); color: var(--forest-800); background: var(--white); font-size: 11px; }
+  .passport-actions .button-dark { color: var(--white); background: var(--forest-900); }
   .loading-card { min-height: 300px; display: grid; place-items: center; color: var(--muted); }
 
   .register-section { padding: 120px 0; color: var(--white); background: var(--forest-950); }
@@ -308,6 +334,18 @@
   .field.full { margin-top: 18px; }
   .full-span { grid-column: 1 / -1; }
   .field small { display: block; margin-top: 6px; color: #849089; font-size: 10px; }
+  .photo-upload { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #f8faf5; }
+  .photo-upload .field input[type="file"] { min-width: 0; max-width: 100%; padding: 7px; font-size: 12px; cursor: pointer; }
+  .photo-upload input::file-selector-button { margin-right: 9px; padding: 9px 12px; border: 0; border-radius: 6px; color: var(--white); background: var(--forest-800); font: inherit; font-weight: 700; cursor: pointer; }
+  .photo-upload-help, .photo-upload-note { margin: 8px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+  .photo-upload-note { margin-top: 0; }
+  .photo-upload-preview { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+  .photo-upload-preview > img { width: 112px; height: 94px; object-fit: contain; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  .photo-upload-preview > div { flex: 1 1 150px; min-width: 0; }
+  .photo-file-name { margin: 0 0 8px; color: var(--ink); font-size: 12px; overflow-wrap: anywhere; }
+  .photo-remove { min-height: 40px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; color: var(--forest-800); background: var(--white); font-size: 11px; font-weight: 700; cursor: pointer; }
+  .photo-upload-status { margin: 10px 0 0; color: var(--forest-700); font-size: 11px; }
+  .photo-upload-error { margin: 10px 0 0; padding: 9px 11px; border-left: 3px solid var(--danger); color: #7f3328; background: #f9ece8; font-size: 12px; }
   .input-action { display: flex !important; margin: 0 !important; }
   .input-action input { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
   .input-action button { width: 49px; flex: 0 0 49px; display: grid; place-items: center; border: 1px solid #d8dfda; border-left: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; color: var(--forest-700); background: var(--sage-100); cursor: pointer; }
@@ -352,6 +390,7 @@
     .process-grid { grid-template-columns: 1fr 1fr; }
     .process-grid li::after { display: none; }
     .catalog-grid { grid-template-columns: 1fr 1fr; }
+    .qr-generator-grid { gap: 38px; }
     .register-grid { grid-template-columns: 1fr; gap: 52px; }
     .register-intro { position: static; max-width: 650px; }
     .passport-hero { grid-template-columns: 1fr 1fr; }
@@ -390,7 +429,9 @@
     .stats-row { grid-template-columns: 1fr; gap: 15px; }
     .stats-row > div { justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
     .stats-row span { max-width: none; text-align: right; }
-    .process-section, .catalog-section, .register-section { padding: 80px 0; }
+    .process-section, .catalog-section, .register-section, .qr-generator-section { padding: 80px 0; }
+    .qr-generator-grid { grid-template-columns: 1fr; gap: 30px; }
+    .qr-generator-card { padding: 24px 20px; }
     .section-heading.split { grid-template-columns: 1fr; gap: 18px; }
     .process-grid { grid-template-columns: 1fr; }
     .process-grid li { min-height: 220px; }
@@ -465,6 +506,7 @@
           <a href="#home">Басты бет</a>
           <a href="#catalog">Каталог</a>
           <a href="#register">Ағаш тіркеу</a>
+          <a href="#qr-generator">QR-код</a>
           <a class="nav-search" href="#catalog" aria-label="Каталогтан іздеу">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
           </a>
@@ -571,6 +613,35 @@
         </div>
       </section>
 
+      <section class="qr-generator-section" id="qr-generator" aria-labelledby="qr-generator-title">
+        <div class="shell qr-generator-grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Көрсету және бөлісу</p>
+            <h2 id="qr-generator-title">Сайтқа апаратын QR-код</h2>
+            <p class="qr-intro">Комиссияға көрсету, басып шығару немесе бөлісу үшін сайттың QR-кодын жүктеңіз. Жеке ағаш үшін оқытушы жариялаған паспортты таңдаңыз.</p>
+            <p class="qr-privacy-note">QR-код осы браузерде жасалады. Жарияланбаған зерттеулерге ашық QR берілмейді.</p>
+          </div>
+          <div class="qr-generator-card reveal reveal-delay">
+            <form id="qr-generator-form">
+              <label class="field" for="qr-target"><span>QR-код қайда апарады?</span><select id="qr-target" name="qr-target"><option value="site">Сайттың басты беті</option><option value="passport">Жарияланған ағаш паспорты</option></select></label>
+              <label class="field full" id="qr-tree-field" for="qr-tree-id" hidden><span>Ағаштың FOREST ID нөмірі</span><input id="qr-tree-id" name="forestId" maxlength="32" placeholder="FOREST-00002" autocapitalize="characters" spellcheck="false" aria-describedby="qr-tree-help"><small id="qr-tree-help">Каталогтағы жарияланған паспорттың нөмірін енгізіңіз.</small></label>
+              <button class="button button-dark" id="qr-generate-button" type="submit">QR-код жасау</button>
+            </form>
+            <p class="qr-generator-status" id="qr-status" role="status" aria-live="polite">Сайт мекенжайы тексерілуде…</p>
+            <div class="form-error" id="qr-error" role="alert" hidden></div>
+            <div class="qr-generator-result" id="qr-result" hidden>
+              <div class="qr-generator-image" id="qr-image" role="img" aria-label="Таңдалған сілтеменің QR-коды"></div>
+              <a id="qr-target-link" target="_blank" rel="noopener noreferrer">QR ашатын сілтеме</a>
+              <div class="qr-download-actions">
+                <button class="button button-dark" id="qr-download-png" type="button">PNG жүктеу</button>
+                <button class="button qr-download-svg" id="qr-download-svg" type="button">SVG жүктеу</button>
+              </div>
+              <p class="qr-download-help">PNG — телефон мен презентацияға, SVG — сапасын жоғалтпай басып шығаруға. Қағазға шығармас бұрын QR-кодты телефоныңызбен тексеріңіз.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="passport-section" id="passport" aria-labelledby="passport-title" hidden>
         <div class="shell">
           <button class="back-button" id="passport-back" type="button"><span aria-hidden="true">←</span> Каталогқа оралу</button>
@@ -638,8 +709,21 @@
                 <div class="field-grid two">
                   <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
                   <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
-                  <label class="field full-span"><span>Ағаштың фотосуреті (HTTPS сілтемесі)</span><input name="photoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Ағаштың жалпы көрінісі бар ашық сурет сілтемесі.</small></label>
-                  <label class="field full-span"><span>Генеративтік мүшенің фотосуреті (HTTPS сілтемесі)</span><input name="organPhotoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Гүл, жеміс, тұқым немесе бүр анық көрінетін ашық сурет сілтемесі.</small></label>
+                  <div class="photo-upload full-span" data-photo-field="treePhoto">
+                    <label class="field" for="tree-photo"><span>Ағаштың фотосуреті</span><input id="tree-photo" name="treePhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="tree-photo-help tree-photo-status tree-photo-error"></label>
+                    <p class="photo-upload-help" id="tree-photo-help">Ағаштың жалпы көрінісін таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын ағаш фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
+                    <p class="photo-upload-status" id="tree-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
+                    <p class="photo-upload-error" id="tree-photo-error" data-photo-error role="alert" hidden></p>
+                  </div>
+                  <div class="photo-upload full-span" data-photo-field="organPhoto">
+                    <label class="field" for="organ-photo"><span>Генеративтік мүшенің фотосуреті</span><input id="organ-photo" name="organPhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="organ-photo-help organ-photo-status organ-photo-error"></label>
+                    <p class="photo-upload-help" id="organ-photo-help">Гүл, жеміс, тұқым немесе бүр анық көрінетін фото таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын генеративтік мүше фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
+                    <p class="photo-upload-status" id="organ-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
+                    <p class="photo-upload-error" id="organ-photo-error" data-photo-error role="alert" hidden></p>
+                  </div>
+                  <p class="photo-upload-note full-span">Әр фото жіберу алдында браузерде JPEG форматына ауысып, ең ұзын жағы 1600 пиксельге және көлемі 750 КБ дейін кішірейеді. Файлдағы камера мен GPS метадеректері алынып тасталады; формадағы GPS өрісі бөлек сақталады. Құрылғыдағы түпнұсқа файл өзгермейді.</p>
                 </div>
                 <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
               </fieldset>
@@ -676,7 +760,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script>
       window.__INITIAL_TREE_ID__ = "";
-      window.__APP_VERSION__ = "1.2.0";
+      window.__APP_VERSION__ = "1.3.0";
     </script>
     <script>
 /*
@@ -3011,13 +3095,343 @@ var qrcode = function() {
 window.qrcode = qrcode;
 </script>
 
+    <script>
+  (function () {
+    'use strict';
+
+    var MAX_INPUT_BYTES = 20 * 1024 * 1024;
+    var MAX_OUTPUT_BYTES = 750 * 1024;
+    var MAX_EDGE = 1600;
+    var MAX_SOURCE_EDGE = 16384;
+    var MAX_SOURCE_PIXELS = 50000000;
+    var MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+    var binding = null;
+
+    function validateFile(file) {
+      if (!file || !Number.isFinite(file.size) || file.size <= 0) throw new Error('Бос немесе оқылмайтын файл. Басқа фотосуретті таңдаңыз.');
+      if (file.size > MAX_INPUT_BYTES) throw new Error('Файл 20 МБ-тан үлкен. Көлемі кішірек фотосуретті таңдаңыз.');
+      if (file.type && MIME_TYPES.indexOf(file.type.toLowerCase()) === -1) throw new Error('JPEG, PNG немесе WebP фотосуретін таңдаңыз. HEIC және басқа форматтарды алдымен JPEG-ке ауыстырыңыз.');
+    }
+
+    function detectMime(bytes) {
+      if (bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) return 'image/jpeg';
+      if (bytes.length >= 8 && [137, 80, 78, 71, 13, 10, 26, 10].every(function (value, index) { return bytes[index] === value; })) return 'image/png';
+      if (bytes.length >= 12 && bytes[0] === 82 && bytes[1] === 73 && bytes[2] === 70 && bytes[3] === 70 && bytes[8] === 87 && bytes[9] === 69 && bytes[10] === 66 && bytes[11] === 80) return 'image/webp';
+      return '';
+    }
+
+    function invalidDimensions() {
+      throw new Error('Фотосуреттің бастапқы өлшемін қауіпсіз анықтау мүмкін болмады. Файлды JPEG, PNG немесе WebP ретінде қайта сақтап көріңіз.');
+    }
+
+    function checkSourceDimensions(width, height) {
+      if (!Number.isSafeInteger(width) || !Number.isSafeInteger(height) || width <= 0 || height <= 0) invalidDimensions();
+      if (width > MAX_SOURCE_EDGE || height > MAX_SOURCE_EDGE || width * height > MAX_SOURCE_PIXELS) {
+        throw new Error('Фотосурет тым үлкен: 50 мегапиксельден және әр жағы 16 384 пиксельден аспауы керек. Алдымен суретті кішірейтіп, қайта таңдаңыз.');
+      }
+      return { width: width, height: height };
+    }
+
+    // Read only the encoded bytes (already capped at 20 MiB), never pixels.
+    // JPEG metadata can precede SOF anywhere in the file, so no fixed-offset guess.
+    function sourceDimensions(bytes, mimeType) {
+      function be16(at) { return bytes[at] * 256 + bytes[at + 1]; }
+      function be32(at) { return bytes[at] * 16777216 + bytes[at + 1] * 65536 + bytes[at + 2] * 256 + bytes[at + 3]; }
+      function le24(at) { return bytes[at] + bytes[at + 1] * 256 + bytes[at + 2] * 65536; }
+      function le32(at) { return le24(at) + bytes[at + 3] * 16777216; }
+      function fourCC(at) { return String.fromCharCode(bytes[at], bytes[at + 1], bytes[at + 2], bytes[at + 3]); }
+      if (detectMime(bytes) !== mimeType) invalidDimensions();
+      if (mimeType === 'image/png') {
+        if (bytes.length < 33 || be32(8) !== 13 || fourCC(12) !== 'IHDR' || bytes[26] !== 0 || bytes[27] !== 0 || bytes[28] > 1) invalidDimensions();
+        return checkSourceDimensions(be32(16), be32(20));
+      }
+      if (mimeType === 'image/jpeg') {
+        var at = 2;
+        while (at < bytes.length) {
+          if (bytes[at++] !== 255) invalidDimensions();
+          while (bytes[at] === 255) at += 1;
+          var marker = bytes[at++];
+          if (marker === 0 || marker === 1 || (marker >= 208 && marker <= 218) || at + 2 > bytes.length) invalidDimensions();
+          var length = be16(at), end = at + length;
+          if (length < 2 || end > bytes.length) invalidDimensions();
+          // SOF0/1/2 are ordinary sequential/progressive JPEG frames.
+          if (marker === 192 || marker === 193 || marker === 194) {
+            var components = bytes[at + 7];
+            if (length < 11 || [8, 12].indexOf(bytes[at + 2]) === -1 || !components || components > 4 || length !== 8 + components * 3) invalidDimensions();
+            return checkSourceDimensions(be16(at + 5), be16(at + 3));
+          }
+          // Unsupported frame modes cannot supply a trusted canvas size.
+          if (marker >= 192 && marker <= 207 && [196, 200, 204].indexOf(marker) === -1) invalidDimensions();
+          at = end;
+        }
+        invalidDimensions();
+      }
+      if (mimeType === 'image/webp') {
+        if (bytes.length < 26 || le32(4) + 8 !== bytes.length) invalidDimensions();
+        var chunk = fourCC(12), chunkLength = le32(16);
+        if (chunkLength + 20 + (chunkLength % 2) > bytes.length) invalidDimensions();
+        if (chunk === 'VP8X') {
+          if (chunkLength !== 10 || bytes.length < 30 || (bytes[20] & 193) || bytes[21] || bytes[22] || bytes[23]) invalidDimensions();
+          return checkSourceDimensions(le24(24) + 1, le24(27) + 1);
+        }
+        if (chunk === 'VP8 ') {
+          if (chunkLength < 10 || bytes.length < 30 || (bytes[20] & 1) || bytes[23] !== 157 || bytes[24] !== 1 || bytes[25] !== 42) invalidDimensions();
+          return checkSourceDimensions((bytes[26] + bytes[27] * 256) & 16383, (bytes[28] + bytes[29] * 256) & 16383);
+        }
+        if (chunk === 'VP8L') {
+          if (chunkLength < 5 || bytes[20] !== 47 || (bytes[24] & 224)) invalidDimensions();
+          return checkSourceDimensions(1 + bytes[21] + ((bytes[22] & 63) * 256), 1 + (bytes[22] >> 6) + bytes[23] * 4 + (bytes[24] & 15) * 1024);
+        }
+      }
+      invalidDimensions();
+    }
+
+    async function inspectSource(file) {
+      validateFile(file);
+      var bytes = new Uint8Array(await readBuffer(file));
+      var signature = detectMime(bytes);
+      if (!signature || (file.type && signature !== file.type.toLowerCase())) throw new Error('Файлдың мазмұны JPEG, PNG немесе WebP форматына сәйкес келмейді.');
+      return sourceDimensions(bytes, signature);
+    }
+
+    function scaledDimensions(width, height, maxEdge) {
+      if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) throw new Error('Фотосуреттің өлшемін оқу мүмкін болмады.');
+      var ratio = Math.min(1, maxEdge / Math.max(width, height));
+      return { width: Math.max(1, Math.round(width * ratio)), height: Math.max(1, Math.round(height * ratio)) };
+    }
+
+    function jpegName(name) {
+      var base = String(name || '').split(/[\\/]/).pop().replace(/\.[^.]*$/, '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 100);
+      return (base || 'forest-photo') + '.jpg';
+    }
+
+    function readBuffer(blob) {
+      if (typeof blob.arrayBuffer === 'function') return blob.arrayBuffer();
+      return new Promise(function (resolve, reject) {
+        var reader = new window.FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = function () { reject(new Error('Файлды оқу мүмкін болмады.')); };
+        reader.readAsArrayBuffer(blob);
+      });
+    }
+
+    function loadImageElement(file) {
+      return new Promise(function (resolve, reject) {
+        var url = window.URL.createObjectURL(file);
+        var image = new window.Image();
+        image.onload = function () {
+          window.URL.revokeObjectURL(url);
+          resolve({ image: image, width: image.naturalWidth, height: image.naturalHeight, close: function () { image.src = ''; } });
+        };
+        image.onerror = function () {
+          window.URL.revokeObjectURL(url);
+          reject(new Error('Фотосурет ашылмады. Файл зақымдалмағанын тексеріп, қайта таңдаңыз.'));
+        };
+        image.src = url;
+      });
+    }
+
+    async function decodeImage(file) {
+      if (typeof window.createImageBitmap === 'function') {
+        try {
+          var bitmap = await window.createImageBitmap(file, { imageOrientation: 'from-image' });
+          return { image: bitmap, width: bitmap.width, height: bitmap.height, close: function () { bitmap.close(); } };
+        } catch (error) { /* Older browsers may decode this format through Image instead. */ }
+      }
+      return loadImageElement(file);
+    }
+
+    function canvasBlob(canvas, quality) {
+      return new Promise(function (resolve, reject) {
+        canvas.toBlob(function (blob) {
+          if (!blob || blob.type !== 'image/jpeg') reject(new Error('Браузер фотосуретті JPEG-ке ауыстыра алмады. Браузерді жаңартып көріңіз.'));
+          else resolve(blob);
+        }, 'image/jpeg', quality);
+      });
+    }
+
+    function blobBase64(blob) {
+      return new Promise(function (resolve, reject) {
+        var reader = new window.FileReader();
+        reader.onload = function () {
+          var value = String(reader.result || '');
+          var prefix = 'data:image/jpeg;base64,';
+          if (value.indexOf(prefix) !== 0) reject(new Error('Фотосуретті жіберуге дайындау мүмкін болмады.'));
+          else resolve(value.slice(prefix.length));
+        };
+        reader.onerror = function () { reject(new Error('Фотосуретті жіберуге дайындау мүмкін болмады.')); };
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function compressPhoto(file) {
+      await inspectSource(file); // Must finish before createImageBitmap/Image.
+      var decoded = await decodeImage(file);
+      var canvas = document.createElement('canvas');
+      try {
+        checkSourceDimensions(decoded.width, decoded.height);
+        var context = canvas.getContext('2d');
+        if (!context || typeof canvas.toBlob !== 'function') throw new Error('Бұл браузер фотосуретті дайындауды қолдамайды. Жаңартылған браузер қолданыңыз.');
+        var sizes = [MAX_EDGE, 1280, 1024, 800];
+        var qualities = [0.86, 0.76, 0.66, 0.56];
+        for (var sizeIndex = 0; sizeIndex < sizes.length; sizeIndex += 1) {
+          var dimensions = scaledDimensions(decoded.width, decoded.height, sizes[sizeIndex]);
+          canvas.width = dimensions.width;
+          canvas.height = dimensions.height;
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(decoded.image, 0, 0, canvas.width, canvas.height);
+          for (var qualityIndex = 0; qualityIndex < qualities.length; qualityIndex += 1) {
+            var blob = await canvasBlob(canvas, qualities[qualityIndex]);
+            if (blob.size > 0 && blob.size <= MAX_OUTPUT_BYTES) {
+              return {
+                payload: { name: jpegName(file.name), mimeType: 'image/jpeg', base64: await blobBase64(blob) },
+                blob: blob,
+                width: dimensions.width,
+                height: dimensions.height
+              };
+            }
+          }
+        }
+        throw new Error('Фотосурет 750 КБ шегіне дейін қысқармады. Көлемі кішірек фото таңдаңыз.');
+      } finally {
+        decoded.close();
+        canvas.width = 0;
+        canvas.height = 0;
+      }
+    }
+
+    function clearSlot(slot, clearInput) {
+      slot.version += 1;
+      slot.file = null;
+      slot.result = null;
+      slot.error = null;
+      slot.pending = null;
+      if (slot.previewUrl) window.URL.revokeObjectURL(slot.previewUrl);
+      slot.previewUrl = '';
+      slot.preview.removeAttribute('src');
+      slot.preview.hidden = false;
+      slot.previewBox.hidden = true;
+      slot.fileName.textContent = '';
+      slot.errorElement.textContent = '';
+      slot.errorElement.hidden = true;
+      slot.status.textContent = 'Файл таңдалмаған.';
+      slot.container.removeAttribute('aria-busy');
+      slot.input.removeAttribute('aria-invalid');
+      slot.input.setCustomValidity('');
+      if (clearInput) slot.input.value = '';
+    }
+
+    function selectFile(slot) {
+      var file = slot.input.files && slot.input.files[0];
+      clearSlot(slot, false);
+      if (!file) return;
+      slot.file = file;
+      var version = slot.version;
+      slot.container.setAttribute('aria-busy', 'true');
+      slot.status.textContent = 'Фотосурет дайындалуда…';
+      slot.previewBox.hidden = false;
+      slot.preview.hidden = true;
+      slot.fileName.textContent = String(file.name || 'Фотосурет');
+      slot.pending = compressPhoto(file)
+        .then(function (result) {
+          if (version !== slot.version) return;
+          slot.result = result.payload;
+          slot.previewUrl = window.URL.createObjectURL(result.blob);
+          slot.preview.src = slot.previewUrl;
+          slot.preview.hidden = false;
+          slot.previewBox.hidden = false;
+          slot.fileName.textContent = result.payload.name;
+          slot.status.textContent = 'Жіберуге дайын: JPEG · ' + result.width + ' × ' + result.height + ' пиксель · ' + Math.ceil(result.blob.size / 1024) + ' КБ. Әлі жіберілген жоқ.';
+        })
+        .catch(function (error) {
+          if (version !== slot.version) return;
+          slot.error = error instanceof Error ? error : new Error('Фотосуретті дайындау мүмкін болмады.');
+          slot.errorElement.textContent = slot.error.message;
+          slot.errorElement.hidden = false;
+          slot.status.textContent = 'Фотосурет дайын емес. Басқа файл таңдаңыз немесе алып тастаңыз.';
+          slot.previewBox.hidden = false;
+          slot.preview.hidden = true;
+          slot.fileName.textContent = String(file.name || 'Фотосурет');
+          slot.input.setCustomValidity(slot.error.message);
+          slot.input.setAttribute('aria-invalid', 'true');
+        })
+        .finally(function () {
+          if (version === slot.version) slot.container.removeAttribute('aria-busy');
+        });
+    }
+
+    function bind(form) {
+      if (!form || !form.elements) throw new Error('Фото формасы табылмады.');
+      if (binding && binding.form === form) return api;
+      if (binding) {
+        reset();
+        binding.slots.forEach(function (slot) {
+          slot.input.removeEventListener('change', slot.onChange);
+          slot.remove.removeEventListener('click', slot.onRemove);
+        });
+        binding.form.removeEventListener('reset', reset);
+      }
+      var slots = ['treePhoto', 'organPhoto'].map(function (name) {
+        var container = form.querySelector('[data-photo-field="' + name + '"]');
+        var input = form.elements.namedItem(name);
+        if (!container || !input) throw new Error('Фотосурет өрісі табылмады: ' + name);
+        var slot = {
+          input: input, container: container, version: 0, file: null, result: null, error: null, pending: null, previewUrl: '',
+          payloadKey: name === 'treePhoto' ? 'photoFile' : 'organPhotoFile',
+          preview: container.querySelector('[data-photo-preview]'),
+          previewBox: container.querySelector('[data-photo-preview-box]'),
+          fileName: container.querySelector('[data-photo-file-name]'),
+          status: container.querySelector('[data-photo-status]'),
+          errorElement: container.querySelector('[data-photo-error]'),
+          remove: container.querySelector('[data-photo-remove]')
+        };
+        slot.onChange = function () { slot.preview.hidden = false; selectFile(slot); };
+        slot.onRemove = function () { clearSlot(slot, true); slot.preview.hidden = false; slot.input.focus(); };
+        input.addEventListener('change', slot.onChange);
+        slot.remove.addEventListener('click', slot.onRemove);
+        return slot;
+      });
+      binding = { form: form, slots: slots };
+      form.addEventListener('reset', reset);
+      slots.forEach(function (slot) { if (slot.input.files && slot.input.files.length) selectFile(slot); });
+      return api;
+    }
+
+    async function prepare() {
+      if (!binding) throw new Error('Фото модулі іске қосылмаған. Бетті қайта жүктеңіз.');
+      var result = { photoFile: null, organPhotoFile: null };
+      for (var index = 0; index < binding.slots.length; index += 1) {
+        var slot = binding.slots[index];
+        if ((slot.input.files && slot.input.files[0] || null) !== slot.file) selectFile(slot);
+        while (slot.pending) {
+          var pending = slot.pending;
+          await pending;
+          if (pending === slot.pending) break;
+        }
+        if (slot.error) { slot.input.focus(); throw slot.error; }
+        if (slot.file && !slot.result) throw new Error('Фотосурет әлі дайын емес. Қайта көріңіз.');
+        result[slot.payloadKey] = slot.result;
+      }
+      return result;
+    }
+
+    function reset() {
+      if (binding) binding.slots.forEach(function (slot) { clearSlot(slot, true); slot.preview.hidden = false; });
+    }
+
+    var api = Object.freeze({ bind: bind, prepare: prepare, reset: reset });
+    window.ForestPhotoUpload = api;
+  }());
+</script>
+
     <script>window.FOREST_ID_RUNTIME = {"mode":"production","apiUrl":"https://script.google.com/macros/s/AKfycbz91nxWFaGPkl6f_Zteii5kC5_tVdQ0N0mwmoiRZ3_T8stwsXORxDxRB4FuCp8PHdm3/exec","siteUrl":"https://shaikh21bb.github.io/forest-id/"};</script>
 <script>
   (function () {
     'use strict';
 
     var hasExternalRuntime = Object.prototype.hasOwnProperty.call(window, 'FOREST_ID_RUNTIME');
-    var publicMethods = ['getBootstrapData', 'getCatalog', 'getTreePassport', 'submitTree'];
+    var publicMethods = ['getBootstrapData', 'getCatalog', 'getTreePassport', 'getTreePhoto', 'submitTree'];
     var state = {
       config: {
         projectTitle: 'FOREST ID',
@@ -3027,6 +3441,15 @@ window.qrcode = qrcode;
       records: [],
       connected: false,
       passportRequest: 0,
+      qrRequest: 0,
+      qrDownload: null,
+      qrFiles: [],
+      activeRoute: 'section:' + validSectionHash(window.location.hash),
+      photoEpoch: 0,
+      photoObserver: null,
+      photoQueue: [],
+      photoActive: 0,
+      photoUploadBound: false,
       submitting: false,
       submission: null,
       mode: hasExternalRuntime || hasAppsScriptBridge() ? 'production' : 'preview'
@@ -3121,6 +3544,8 @@ window.qrcode = qrcode;
       setupCatalog();
       setupForm();
       setupPassportControls();
+      setupQrGenerator();
+      setupPhotoControls();
       updateModeLabel();
       loadBootstrap();
     }
@@ -3143,6 +3568,16 @@ window.qrcode = qrcode;
       elements.passport = document.getElementById('passport');
       elements.passportContent = document.getElementById('passport-content');
       elements.toast = document.getElementById('toast');
+      elements.qrForm = document.getElementById('qr-generator-form');
+      elements.qrTarget = document.getElementById('qr-target');
+      elements.qrTreeId = document.getElementById('qr-tree-id');
+      elements.qrTreeField = document.getElementById('qr-tree-field');
+      elements.qrGenerateButton = document.getElementById('qr-generate-button');
+      elements.qrResult = document.getElementById('qr-result');
+      elements.qrImage = document.getElementById('qr-image');
+      elements.qrTargetLink = document.getElementById('qr-target-link');
+      elements.qrError = document.getElementById('qr-error');
+      elements.qrStatus = document.getElementById('qr-status');
     }
 
     function setupNavigation() {
@@ -3187,7 +3622,7 @@ window.qrcode = qrcode;
 
     function validSectionHash(hash) {
       var value = '#' + String(hash || '').replace(/^#/, '');
-      return ['#home', '#catalog', '#register', '#top', '#main'].indexOf(value) !== -1 ? value : '#home';
+      return ['#home', '#catalog', '#register', '#qr-generator', '#top', '#main'].indexOf(value) !== -1 ? value : '#home';
     }
 
     function readRoute(callback) {
@@ -3269,6 +3704,15 @@ window.qrcode = qrcode;
       var today = new Date();
       var dateInput = elements.treeForm.elements.studyDate;
       dateInput.max = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+      if (window.ForestPhotoUpload && typeof window.ForestPhotoUpload.bind === 'function') {
+        try {
+          window.ForestPhotoUpload.bind(elements.treeForm);
+          state.photoUploadBound = true;
+        } catch (error) {
+          elements.formError.textContent = errorMessage(error);
+          elements.formError.hidden = false;
+        }
+      }
 
       elements.treeForm.addEventListener('input', function (event) {
         if (event.target.setCustomValidity) event.target.setCustomValidity('');
@@ -3296,11 +3740,259 @@ window.qrcode = qrcode;
         if (copyButton) copyText(copyButton.getAttribute('data-copy-url'));
         var printButton = event.target.closest('[data-print-passport]');
         if (printButton) window.print();
+        var qrButton = event.target.closest('[data-download-qr]');
+        if (qrButton) downloadQr({
+          url: qrButton.getAttribute('data-qr-url'),
+          forestId: qrButton.getAttribute('data-qr-id')
+        }, qrButton.getAttribute('data-download-qr'), qrButton);
       });
+    }
+
+    function setupQrGenerator() {
+      if (!elements.qrForm) return;
+      if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', clearQrFiles);
+      elements.qrForm.addEventListener('submit', generateSelectedQr);
+      elements.qrTarget.addEventListener('change', updateQrSelection);
+      elements.qrTreeId.addEventListener('input', function () {
+        if (elements.qrTreeId.setCustomValidity) elements.qrTreeId.setCustomValidity('');
+        resetQrResult();
+        elements.qrStatus.textContent = 'FOREST ID енгізіп, жарияланған паспортты тексеріңіз.';
+      });
+      ['png', 'svg'].forEach(function (format) {
+        var button = document.getElementById('qr-download-' + format);
+        if (button) button.addEventListener('click', function () { downloadQr(state.qrDownload, format, button); });
+      });
+      updateQrSelection();
+    }
+
+    function resetQrResult() {
+      ++state.qrRequest;
+      clearQrFiles();
+      state.qrDownload = null;
+      elements.qrResult.hidden = true;
+      elements.qrImage.innerHTML = '';
+      elements.qrTargetLink.removeAttribute('href');
+      elements.qrTargetLink.textContent = '';
+      elements.qrError.hidden = true;
+      elements.qrGenerateButton.disabled = false;
+      elements.qrGenerateButton.textContent = 'QR-код жасау';
+    }
+
+    function updateQrSelection() {
+      if (!elements.qrForm) return;
+      resetQrResult();
+      var passport = elements.qrTarget.value === 'passport';
+      if (elements.qrTreeField) elements.qrTreeField.hidden = !passport;
+      elements.qrTreeId.disabled = !passport || state.mode === 'preview';
+      elements.qrTreeId.required = passport;
+      if (elements.qrTreeId.setCustomValidity) elements.qrTreeId.setCustomValidity('');
+      if (state.mode === 'preview') {
+        elements.qrGenerateButton.disabled = true;
+        elements.qrStatus.textContent = 'Демо режимде ортақ QR жасалмайды. Жарияланған сайтты ашыңыз.';
+        return;
+      }
+      if (passport) {
+        elements.qrStatus.textContent = 'Тек оқытушы жариялаған паспортқа QR жасалады.';
+        return;
+      }
+      generateSelectedQr();
+    }
+
+    function generateSelectedQr(event) {
+      if (event) event.preventDefault();
+      if (!elements.qrForm) return Promise.resolve();
+      resetQrResult();
+      var request = state.qrRequest;
+      if (state.mode === 'preview') {
+        updateQrSelection();
+        return Promise.resolve();
+      }
+      var siteUrl = publicSiteUrl();
+      if (!siteUrl) {
+        showQrError('QR жасау үшін жарияланған сайттың тұрақты мекенжайы дұрыс бапталуы керек.');
+        return Promise.resolve();
+      }
+      if (elements.qrTarget.value === 'site') {
+        try { showQrResult(siteUrl, ''); } catch (error) { showQrError(errorMessage(error)); }
+        return Promise.resolve();
+      }
+      if (elements.qrTarget.value !== 'passport') {
+        showQrError('Сайт немесе жарияланған паспорт нұсқасын таңдаңыз.');
+        return Promise.resolve();
+      }
+      var forestId = normaliseForestId(elements.qrTreeId.value);
+      if (!/^FOREST-\d{5,8}$/.test(forestId) || Number(forestId.slice(7)) < 1) {
+        showQrError('FOREST ID нөмірін дұрыс енгізіңіз. Мысалы: FOREST-00001.');
+        return Promise.resolve();
+      }
+      elements.qrTreeId.value = forestId;
+      elements.qrGenerateButton.disabled = true;
+      elements.qrGenerateButton.textContent = 'Тексерілуде…';
+      elements.qrStatus.textContent = 'Паспорттың жарияланғаны тексерілуде…';
+      return callServer('getTreePassport', forestId)
+        .then(function (record) {
+          if (request !== state.qrRequest) return;
+          if (!record || record.forestId !== forestId || record.status !== 'ЖАРИЯЛАНДЫ') throw new Error('Жарияланған паспорт табылмады.');
+          var url = publicPassportUrl(buildPassportUrl(forestId));
+          if (!url) throw new Error('Паспорттың ашық мекенжайы дұрыс емес.');
+          showQrResult(url, forestId);
+        })
+        .catch(function (error) {
+          if (request === state.qrRequest) showQrError(errorMessage(error));
+        })
+        .finally(function () {
+          if (request !== state.qrRequest) return;
+          elements.qrGenerateButton.disabled = false;
+          elements.qrGenerateButton.textContent = 'QR-код жасау';
+        });
+    }
+
+    function showQrError(message) {
+      state.qrDownload = null;
+      elements.qrResult.hidden = true;
+      elements.qrError.textContent = message;
+      elements.qrError.hidden = false;
+      elements.qrStatus.textContent = '';
+    }
+
+    function showQrResult(url, forestId) {
+      var qr = createQr(url);
+      elements.qrImage.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 16, scalable: true });
+      elements.qrImage.setAttribute('role', 'img');
+      elements.qrImage.setAttribute('aria-label', forestId ? forestId + ' паспортының QR-коды' : 'FOREST ID сайтының QR-коды');
+      elements.qrTargetLink.href = url;
+      elements.qrTargetLink.textContent = url;
+      state.qrDownload = { url: url, forestId: forestId };
+      elements.qrResult.hidden = false;
+      elements.qrStatus.textContent = forestId ? forestId + ' жарияланған. QR-код дайын.' : 'Сайттың QR-коды дайын. PNG немесе SVG форматында жүктеңіз.';
+    }
+
+    function publicSiteUrl() {
+      if (state.mode === 'preview') return '';
+      try {
+        if (hasExternalRuntime) return externalRuntime().siteUrl;
+        var url = new URL(state.config.appUrl);
+        if (url.protocol !== 'https:' || url.hostname !== 'script.google.com' || url.port || url.username || url.password || url.search || url.hash || !/^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname)) return '';
+        return url.toString();
+      } catch (error) { return ''; }
+    }
+
+    function publicQrUrl(value) {
+      if (state.mode === 'preview') return '';
+      var siteUrl = publicSiteUrl();
+      if (!siteUrl) return '';
+      return value === siteUrl ? siteUrl : publicPassportUrl(value);
+    }
+
+    function createQr(url) {
+      if (!publicQrUrl(url)) throw new Error('QR тек осы сайттың немесе жарияланған паспорттың мекенжайына жасалады.');
+      if (typeof window.qrcode !== 'function') throw new Error('QR генераторы жүктелмеді. Бетті қайта жүктеңіз.');
+      var qr = window.qrcode(0, 'M');
+      qr.addData(url, 'Byte');
+      qr.make();
+      return qr;
+    }
+
+    function downloadQr(target, format, button) {
+      if (!target || ['png', 'svg'].indexOf(format) === -1) return Promise.resolve();
+      if (button) button.disabled = true;
+      return Promise.resolve().then(function () {
+        var qr = createQr(target.url);
+        var forestId = /^FOREST-\d{5,8}$/.test(target.forestId) ? target.forestId : '';
+        var name = (forestId || 'FOREST-ID-site') + '-QR.' + format;
+        // Four white modules on every side form the scanner's quiet zone.
+        if (format === 'svg') {
+          saveQrBlob(new Blob([qr.createSvgTag(16, 64, forestId || 'FOREST ID', 'FOREST ID QR')], { type: 'image/svg+xml;charset=utf-8' }), name, button);
+          return;
+        }
+        var count = qr.getModuleCount();
+        var cellSize = 16;
+        var margin = 4 * cellSize;
+        var canvas = document.createElement('canvas');
+        canvas.width = canvas.height = (count + 8) * cellSize;
+        var context = canvas.getContext('2d');
+        if (!context || typeof canvas.toBlob !== 'function') throw new Error('Бұл браузер PNG жүктеуді қолдамайды. SVG таңдаңыз.');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#000000';
+        for (var row = 0; row < count; row += 1) {
+          for (var column = 0; column < count; column += 1) {
+            if (qr.isDark(row, column)) context.fillRect(margin + column * cellSize, margin + row * cellSize, cellSize, cellSize);
+          }
+        }
+        return new Promise(function (resolve, reject) {
+          canvas.toBlob(function (blob) {
+            if (!blob) { reject(new Error('PNG жасалмады. SVG таңдаңыз.')); return; }
+            try { saveQrBlob(blob, name, button); resolve(); } catch (error) { reject(error); }
+          }, 'image/png');
+        });
+      }).then(function () {
+        showToast('QR файлы дайын. Жүктелмесе, «Файлды ашу / сақтау» сілтемесін басыңыз.');
+      }).catch(function (error) {
+        showToast(errorMessage(error));
+      }).finally(function () {
+        if (button) button.disabled = false;
+      });
+    }
+
+    function releaseQrFile(file) {
+      window.clearTimeout(file.timer);
+      window.URL.revokeObjectURL(file.url);
+      if (file.fallback) file.fallback.remove();
+      state.qrFiles = state.qrFiles.filter(function (item) { return item !== file; });
+    }
+
+    function clearQrFiles() {
+      state.qrFiles.slice().forEach(releaseQrFile);
+    }
+
+    function saveQrBlob(blob, filename, button) {
+      if (!window.URL || typeof window.URL.createObjectURL !== 'function') throw new Error('Файлды жүктеу үшін браузерді жаңартыңыз.');
+      state.qrFiles.filter(function (file) { return file.button === button; }).forEach(releaseQrFile);
+      while (state.qrFiles.length >= 4) releaseQrFile(state.qrFiles[0]);
+      var objectUrl = window.URL.createObjectURL(blob);
+      var file = { url: objectUrl, button: button, fallback: null, timer: null };
+      // Embedded browsers can ignore an automatic download. Keep a real,
+      // user-activated file link so the generated image can still be opened/saved.
+      if (button && button.parentNode) {
+        var fallback = document.createElement('div');
+        fallback.style.flexBasis = '100%';
+        fallback.style.textAlign = 'center';
+        var openLink = document.createElement('a');
+        openLink.href = objectUrl;
+        openLink.target = '_blank';
+        openLink.rel = 'noopener';
+        openLink.title = filename;
+        openLink.className = 'button qr-file-link';
+        openLink.textContent = filename.slice(-3).toUpperCase() + ' файлын ашу / сақтау';
+        var hint = document.createElement('p');
+        hint.className = 'qr-download-help';
+        hint.setAttribute('role', 'status');
+        hint.textContent = 'Автоматты жүктеу ашылмаса, осы сілтемені басыңыз. Суретті ұзақ басып немесе тінтуірдің оң жақ батырмасымен сақтауға болады. Сілтеме 10 минут жарамды.';
+        fallback.appendChild(openLink);
+        fallback.appendChild(hint);
+        button.parentNode.appendChild(fallback);
+        file.fallback = fallback;
+      }
+      state.qrFiles.push(file);
+      file.timer = window.setTimeout(function () { releaseQrFile(file); }, file.fallback ? 600000 : 10000);
+      var link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      try {
+        link.click();
+      } catch (error) {
+        if (!file.fallback) { releaseQrFile(file); throw error; }
+      } finally {
+        link.remove();
+      }
     }
 
     function loadBootstrap() {
       state.connected = false;
+      resetPhotoLoading();
       elements.catalogCount.textContent = 'Жазбалар жүктелуде…';
       elements.catalogGrid.innerHTML = '<div class="loading-card">Деректер жүктелуде…</div>';
       updateModeLabel();
@@ -3331,6 +4023,7 @@ window.qrcode = qrcode;
       var organization = state.config.organization || '';
       document.getElementById('footer-organization').textContent = organization;
       updateModeLabel();
+      if (elements.qrForm && elements.qrTarget.value === 'site' && !state.qrDownload) updateQrSelection();
     }
 
     function updateModeLabel() {
@@ -3365,10 +4058,13 @@ window.qrcode = qrcode;
       elements.catalogCount.textContent = records.length + (state.mode === 'preview' ? ' демо жазба' : ' тексерілген жазба');
       elements.catalogEmpty.hidden = records.length !== 0;
       elements.catalogGrid.innerHTML = records.map(renderTreeCard).join('');
+      mountPublishedPhotos(elements.catalogGrid);
     }
 
     function renderTreeCard(record) {
-      var media = safeHttps(record.photoUrl)
+      var media = record.hasPhoto === true
+        ? managedPhotoMarkup(record.forestId, 'tree', record.kzName + ' фотосы')
+        : safeHttps(record.photoUrl)
         ? photoMarkup(record.photoUrl, record.kzName + ' фотосы', true)
         : placeholderMarkup();
       return [
@@ -3405,6 +4101,137 @@ window.qrcode = qrcode;
       return '<div class="tree-placeholder" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M40 8C24 20 16 32 16 47c0 14 10 24 24 24s24-10 24-24C64 32 56 20 40 8Z" fill="currentColor"/><path d="M40 22v42M40 36 28 45M40 46l13 8" fill="none" stroke="#f7f4ec" stroke-width="3" stroke-linecap="round"/></svg></div>';
     }
 
+    function managedPhotoMarkup(forestId, slot, alt) {
+      if (state.mode === 'preview' || !/^FOREST-\d{5,8}$/.test(String(forestId)) || ['tree', 'organ'].indexOf(slot) === -1) return placeholderMarkup();
+      return '<div class="managed-photo" data-photo-id="' + escapeAttribute(forestId) + '" data-photo-slot="' + slot + '" data-photo-alt="' + escapeAttribute(alt) + '" aria-busy="true">' + placeholderMarkup() + '<span data-photo-message>Фото жүктелуде…</span></div>';
+    }
+
+    function setupPhotoControls() {
+      document.addEventListener('click', function (event) {
+        var retry = event.target.closest('[data-photo-retry]');
+        if (!retry) return;
+        var node = retry.closest('[data-photo-id][data-photo-slot]');
+        if (!node || state.mode === 'preview') return;
+        queuePublishedPhoto(node);
+      });
+    }
+
+    function resetPhotoLoading() {
+      ++state.photoEpoch;
+      if (state.photoObserver) state.photoObserver.disconnect();
+      state.photoObserver = null;
+      state.photoQueue = [];
+      // Keep the count of actual in-flight requests across route changes.
+      // Old responses are ignored, and new requests still respect the limit of two.
+    }
+
+    function mountPublishedPhotos(container) {
+      resetPhotoLoading();
+      if (!container || state.mode === 'preview') return;
+      var nodes = Array.from(container.querySelectorAll('[data-photo-id][data-photo-slot]'));
+      if (!nodes.length) return;
+      var epoch = state.photoEpoch;
+      nodes.forEach(function (node) {
+        if (node.getAttribute('data-photo-state') !== 'loaded') node.removeAttribute('data-photo-state');
+      });
+      if (typeof window.IntersectionObserver === 'function') {
+        state.photoObserver = new window.IntersectionObserver(function (entries) {
+          if (epoch !== state.photoEpoch) return;
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            state.photoObserver.unobserve(entry.target);
+            queuePublishedPhoto(entry.target);
+          });
+        }, { rootMargin: '240px 0px' });
+        nodes.forEach(function (node) {
+          if (node.getAttribute('data-photo-state') !== 'loaded') state.photoObserver.observe(node);
+        });
+      } else {
+        nodes.forEach(queuePublishedPhoto);
+      }
+    }
+
+    function queuePublishedPhoto(node) {
+      if (state.mode === 'preview' || !node || !node.isConnected) return;
+      var status = node.getAttribute('data-photo-state');
+      if (['queued', 'loading', 'loaded'].indexOf(status) !== -1) return;
+      var forestId = node.getAttribute('data-photo-id');
+      var slot = node.getAttribute('data-photo-slot');
+      if (!/^FOREST-\d{5,8}$/.test(forestId) || ['tree', 'organ'].indexOf(slot) === -1) return;
+      node.setAttribute('data-photo-state', 'queued');
+      node.setAttribute('aria-busy', 'true');
+      var message = node.querySelector('[data-photo-message]');
+      if (message) message.textContent = 'Фото жүктелуде…';
+      var retry = node.querySelector('[data-photo-retry]');
+      if (retry) retry.remove();
+      state.photoQueue.push({ node: node, forestId: forestId, slot: slot, epoch: state.photoEpoch });
+      pumpPhotoQueue();
+    }
+
+    function photoJobIsCurrent(job) {
+      return job.epoch === state.photoEpoch && job.node.isConnected;
+    }
+
+    function pumpPhotoQueue() {
+      while (state.photoActive < 2 && state.photoQueue.length) {
+        var job = state.photoQueue.shift();
+        if (!photoJobIsCurrent(job)) continue;
+        startPhotoJob(job);
+      }
+    }
+
+    function startPhotoJob(job) {
+      state.photoActive += 1;
+      job.node.setAttribute('data-photo-state', 'loading');
+      callServer('getTreePhoto', { forestId: job.forestId, slot: job.slot })
+        .then(function (response) {
+          if (!photoJobIsCurrent(job)) return;
+          var dataUrl = validatedPhotoDataUrl(response, job.forestId, job.slot);
+          var image = document.createElement('img');
+          image.alt = job.node.getAttribute('data-photo-alt') || 'Өсімдіктің фотосуреті';
+          image.decoding = 'async';
+          image.onload = function () {
+            image.onload = image.onerror = null;
+            if (!photoJobIsCurrent(job)) return;
+            job.node.innerHTML = '';
+            job.node.appendChild(image);
+            job.node.setAttribute('data-photo-state', 'loaded');
+            job.node.setAttribute('aria-busy', 'false');
+          };
+          image.onerror = function () {
+            image.onload = image.onerror = null;
+            if (photoJobIsCurrent(job)) showPhotoLoadError(job.node);
+          };
+          image.src = dataUrl;
+        })
+        .catch(function () {
+          if (photoJobIsCurrent(job)) showPhotoLoadError(job.node);
+        })
+        .finally(function () {
+          state.photoActive -= 1;
+          pumpPhotoQueue();
+        });
+    }
+
+    function showPhotoLoadError(node) {
+      node.setAttribute('data-photo-state', 'error');
+      node.setAttribute('aria-busy', 'false');
+      node.innerHTML = placeholderMarkup() + '<span data-photo-message>Фото жүктелмеді.</span><button class="photo-retry" type="button" data-photo-retry>Қайта жүктеу</button>';
+    }
+
+    function validatedPhotoDataUrl(response, forestId, slot) {
+      if (!response || response.forestId !== forestId || response.slot !== slot || typeof response.dataUrl !== 'string') throw new Error('Фото жауабы дұрыс емес.');
+      var prefix = 'data:image/jpeg;base64,';
+      var value = response.dataUrl;
+      var limit = Math.min(768000, Number(state.config.maxPhotoBytes) || 768000);
+      if (value.indexOf(prefix) !== 0 || value.length > prefix.length + Math.ceil(limit / 3) * 4) throw new Error('Фото форматы дұрыс емес.');
+      var base64 = value.slice(prefix.length);
+      if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(base64) || !base64) throw new Error('Фото деректері дұрыс емес.');
+      var binary = window.atob(base64);
+      if (binary.length > limit || binary.length < 4 || binary.charCodeAt(0) !== 255 || binary.charCodeAt(1) !== 216 || binary.charCodeAt(2) !== 255 || binary.charCodeAt(binary.length - 2) !== 255 || binary.charCodeAt(binary.length - 1) !== 217) throw new Error('JPEG фотосуреті дұрыс емес.');
+      return value;
+    }
+
     function metaItem(label, value) {
       return '<div><dt>' + escapeHtml(label) + '</dt><dd title="' + escapeAttribute(value || '—') + '">' + escapeHtml(value || '—') + '</dd></div>';
     }
@@ -3421,6 +4248,7 @@ window.qrcode = qrcode;
 
     function openPassport(forestId, updateHistory) {
       forestId = normaliseForestId(forestId);
+      updateActiveRoute('passport:' + forestId);
       var request = ++state.passportRequest;
       showOnlyPassport();
       elements.passportContent.innerHTML = '<div class="loading-card">Паспорт жүктелуде…</div>';
@@ -3431,6 +4259,7 @@ window.qrcode = qrcode;
           if (request !== state.passportRequest) return;
           record = withPassportUrl(record);
           elements.passportContent.innerHTML = renderPassport(record);
+          mountPublishedPhotos(elements.passportContent);
           document.title = record.kzName + ' | ' + record.forestId + ' | FOREST ID';
           focusHeading(elements.passportContent);
         })
@@ -3442,6 +4271,7 @@ window.qrcode = qrcode;
     }
 
     function showOnlyPassport() {
+      resetPhotoLoading();
       document.querySelectorAll('main > section').forEach(function (section) {
         section.hidden = section.id !== 'passport';
       });
@@ -3453,11 +4283,20 @@ window.qrcode = qrcode;
       exitPassport('#catalog', updateHistory);
     }
 
+    function updateActiveRoute(route) {
+      // Bootstrap re-applies the current route after its asynchronous fetch.
+      // Keep already generated files alive unless the displayed route changes.
+      if (state.activeRoute !== route) clearQrFiles();
+      state.activeRoute = route;
+    }
+
     function exitPassport(targetHash, updateHistory) {
       ++state.passportRequest;
       targetHash = validSectionHash(targetHash);
+      updateActiveRoute('section:' + targetHash);
       document.querySelectorAll('main > section').forEach(function (section) { section.hidden = false; });
       elements.passport.hidden = true;
+      mountPublishedPhotos(elements.catalogGrid);
       document.title = 'FOREST ID | Цифрлық дендрологиялық паспорттар';
       closeNavigation();
       if (updateHistory) pushRoute('', targetHash);
@@ -3471,13 +4310,17 @@ window.qrcode = qrcode;
     }
 
     function renderPassport(record) {
-      var media = safeHttps(record.photoUrl)
+      var media = record.hasPhoto === true
+        ? managedPhotoMarkup(record.forestId, 'tree', record.kzName + ' фотосы')
+        : safeHttps(record.photoUrl)
         ? photoMarkup(record.photoUrl, record.kzName + ' фотосы', false)
         : placeholderMarkup();
       var isDemo = state.mode === 'preview';
       var passportUrl = isDemo ? '' : publicPassportUrl(record.passportUrl || buildPassportUrl(record.forestId));
       var qr = renderQr(passportUrl, record.forestId);
-      var organPhoto = safeHttps(record.organPhotoUrl)
+      var organPhoto = record.hasOrganPhoto === true
+        ? '<section class="organ-photo"><h4>Генеративтік мүшенің фотосуреті</h4>' + managedPhotoMarkup(record.forestId, 'organ', record.kzName + ': генеративтік мүше') + '</section>'
+        : safeHttps(record.organPhotoUrl)
         ? '<section class="organ-photo"><h4>Генеративтік мүшенің фотосуреті</h4>' + photoMarkup(record.organPhotoUrl, record.kzName + ': генеративтік мүше', true) + '</section>'
         : '';
       return [
@@ -3527,6 +4370,7 @@ window.qrcode = qrcode;
             '</div>',
             '<div class="passport-actions">',
               passportUrl ? '<button class="button button-dark" type="button" data-copy-url="' + escapeAttribute(passportUrl) + '">Сілтемені көшіру</button>' : '',
+              passportUrl ? '<button class="button" type="button" data-download-qr="png" data-qr-url="' + escapeAttribute(passportUrl) + '" data-qr-id="' + escapeAttribute(record.forestId) + '">QR PNG жүктеу</button><button class="button" type="button" data-download-qr="svg" data-qr-url="' + escapeAttribute(passportUrl) + '" data-qr-id="' + escapeAttribute(record.forestId) + '">QR SVG жүктеу</button>' : '',
               '<button class="button" type="button" data-print-passport style="border-color:var(--line)">Басып шығару</button>',
             '</div>',
           '</aside>',
@@ -3543,9 +4387,7 @@ window.qrcode = qrcode;
       if (!url) return '<p>QR жасау үшін жарияланған сайттың тұрақты сілтемесін баптаңыз.</p>';
       if (typeof window.qrcode !== 'function') return '<p>QR-код жүктелмеді. Паспорт сілтемесін төменнен ашуға болады.</p>';
       try {
-        var qr = window.qrcode(0, 'M');
-        qr.addData(url);
-        qr.make();
+        var qr = createQr(url);
         return '<div role="img" aria-label="' + escapeAttribute(forestId + ' паспортына апаратын QR-код') + '">' + qr.createSvgTag({ cellSize: 4, margin: 16, scalable: true }) + '</div>';
       } catch (error) {
         return '<p>QR-код жасалмады. Паспорт сілтемесін төменнен ашуға болады.</p>';
@@ -3566,10 +4408,19 @@ window.qrcode = qrcode;
       if (!elements.treeForm.reportValidity()) return;
 
       var payload = {};
-      new FormData(elements.treeForm).forEach(function (value, key) { payload[key] = value; });
-      payload.requestId = submissionId(payload);
+      // File inputs are prepared separately; raw File objects must never enter
+      // JSON or demo storage. Capture text before disabling form controls.
+      new FormData(elements.treeForm).forEach(function (value, key) {
+        if (key !== 'treePhoto' && key !== 'organPhoto' && typeof value === 'string') payload[key] = value;
+      });
       setSubmitting(true);
-      callServer('submitTree', payload)
+      return prepareSubmissionPayload(payload)
+        .then(function (prepared) {
+          return payloadFingerprint(prepared).then(function (fingerprint) {
+            prepared.requestId = submissionId({ payloadSha256: fingerprint });
+            return callServer('submitTree', prepared);
+          });
+        })
         .then(function (result) {
           if (!result || !result.ok || !/^FOREST-\d{5,8}$/.test(String(result.forestId || ''))) throw new Error('Сақтау нәтижесі расталмады.');
           setSubmitting(false);
@@ -3596,7 +4447,50 @@ window.qrcode = qrcode;
       elements.submitButton.querySelector('span').textContent = isSubmitting ? 'Сақталуда…' : 'Зерттеуді жіберу';
     }
 
+    function selectedPhotoFiles() {
+      return ['treePhoto', 'organPhoto'].some(function (name) {
+        var field = elements.treeForm.elements[name];
+        return Boolean(field && field.files && field.files.length);
+      });
+    }
+
+    function assertPhotoUploadsAvailable() {
+      if (state.mode === 'preview') throw new Error('Демо режимде фото серверге жіберілмейді. Фотоларды алып тастаңыз немесе жарияланған сайтты ашыңыз.');
+      if (!state.connected || state.config.photoUploadsEnabled !== true) throw new Error('Фото жүктеу серверде дайын емес немесе қосылым расталмады. Бетті қайта жүктеңіз немесе фотосыз жіберіңіз.');
+    }
+
+    function prepareSubmissionPayload(payload) {
+      return Promise.resolve().then(function () {
+        var selected = selectedPhotoFiles();
+        if (selected) {
+          assertPhotoUploadsAvailable();
+          if (!state.photoUploadBound || !window.ForestPhotoUpload || typeof window.ForestPhotoUpload.prepare !== 'function') throw new Error('Фото модулі іске қосылмады. Бетті қайта жүктеңіз.');
+        }
+        if (!state.photoUploadBound) return { photoFile: null, organPhotoFile: null };
+        return window.ForestPhotoUpload.prepare();
+      }).then(function (files) {
+        ['photoFile', 'organPhotoFile'].forEach(function (key) {
+          var file = files && files[key];
+          if (!file) return;
+          assertPhotoUploadsAvailable();
+          var maxBytes = Math.min(768000, Number(state.config.maxPhotoBytes) || 768000);
+          if (typeof file !== 'object' || file.mimeType !== 'image/jpeg' || typeof file.base64 !== 'string' || !file.base64 || file.base64.length > Math.ceil(maxBytes / 3) * 4) throw new Error('Фото сервер рұқсат еткен JPEG өлшеміне сәйкес келмейді. Кішірек фото таңдаңыз.');
+          payload[key] = file;
+        });
+        return payload;
+      });
+    }
+
+    function payloadFingerprint(payload) {
+      if (!window.crypto || !window.crypto.subtle || typeof window.TextEncoder !== 'function') return Promise.reject(new Error('Қауіпсіз жіберу үшін жаңартылған браузерде HTTPS сайтты ашыңыз.'));
+      var bytes = new window.TextEncoder().encode(JSON.stringify(payload));
+      return window.crypto.subtle.digest('SHA-256', bytes).then(function (digest) {
+        return Array.from(new Uint8Array(digest)).map(function (byte) { return byte.toString(16).padStart(2, '0'); }).join('');
+      });
+    }
+
     function submissionId(payload) {
+      if (payload && (payload.photoFile || payload.organPhotoFile)) throw new Error('Фото деректерін сақтау алдында қысқа хэшке ауыстырыңыз.');
       var signature = JSON.stringify(payload);
       if (!state.submission) {
         try { state.submission = JSON.parse(sessionStorage.getItem('forest-id-pending-request') || 'null'); } catch (error) { state.submission = null; }
@@ -3691,12 +4585,17 @@ window.qrcode = qrcode;
         options.method = 'GET';
         url.searchParams.set('action', method);
         if (method === 'getTreePassport') url.searchParams.set('forestId', String(argument || ''));
+        if (method === 'getTreePhoto') {
+          url.searchParams.set('forestId', String(argument && argument.forestId || ''));
+          url.searchParams.set('slot', String(argument && argument.slot || ''));
+        }
         if (method === 'getCatalog') {
           url.searchParams.set('query', String(argument && argument.query || ''));
           url.searchParams.set('structure', String(argument && argument.structure || ''));
         }
       }
-      var timeout = window.setTimeout(function () { controller.abort(); }, 45000);
+      var timeoutMs = method === 'submitTree' && argument && (argument.photoFile || argument.organPhotoFile) ? 90000 : 45000;
+      var timeout = window.setTimeout(function () { controller.abort(); }, timeoutMs);
       return window.fetch(url.toString(), options)
         .then(function (response) {
           if (!response.ok) throw new Error('Деректер сервері HTTP ' + response.status + ' қатесін қайтарды. Қайта көріңіз.');
@@ -3733,6 +4632,8 @@ window.qrcode = qrcode;
               return;
             }
             if (method === 'submitTree') {
+              // Even internal callers must not persist photo bytes in demo storage.
+              if (argument && (argument.photoFile || argument.organPhotoFile || argument.treePhoto || argument.organPhoto)) throw new Error('Демо режимде фото серверге жіберілмейді. Жарияланған сайтты ашыңыз.');
               var submissions = JSON.parse(localStorage.getItem('forest-id-demo-submissions') || '[]');
               var existing = submissions.find(function (submission) { return argument.requestId && submission.requestId === argument.requestId; });
               if (existing) {
@@ -3782,13 +4683,12 @@ window.qrcode = qrcode;
 
     function publicPassportUrl(value) {
       try {
+        var base = publicSiteUrl();
+        if (!base) return '';
         var url = new URL(value);
-        if (hasExternalRuntime) {
-          var site = new URL(externalRuntime().siteUrl);
-          if (url.origin !== site.origin || url.pathname !== site.pathname || url.username || url.password || url.hash || Array.from(url.searchParams.keys()).join(',') !== 'tree' || !/^FOREST-\d{5,8}$/.test(url.searchParams.get('tree'))) return '';
-          return url.toString();
-        }
-        if (url.protocol !== 'https:' || url.hostname !== 'script.google.com' || !/\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname)) return '';
+        var site = new URL(base);
+        var forestId = url.searchParams.get('tree');
+        if (url.origin !== site.origin || url.pathname !== site.pathname || url.username || url.password || url.hash || Array.from(url.searchParams.keys()).join(',') !== 'tree' || !/^FOREST-\d{5,8}$/.test(forestId) || Number(forestId.slice(7)) < 1) return '';
         return url.toString();
       } catch (error) { return ''; }
     }

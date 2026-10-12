@@ -1,14 +1,17 @@
 {
   "name": "forest-id",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node scripts/build-preview.mjs",
     "build:pages": "node scripts/build-pages.mjs",
-    "test": "node scripts/build-preview.mjs && node scripts/test.mjs",
+    "test": "node scripts/build-preview.mjs && node scripts/test.mjs && node scripts/test-http.mjs && node scripts/test-photo-backend.mjs && node --test scripts/test-pages.mjs scripts/test-qr-ui.mjs scripts/test-photo-client.mjs scripts/test-photo-upload.mjs",
     "test:http": "node scripts/test-http.mjs",
     "test:pages": "node --test scripts/test-pages.mjs",
+    "test:photos": "node --test scripts/test-photo-upload.mjs scripts/test-photo-backend.mjs scripts/test-photo-client.mjs",
+    "test:qr": "node --test scripts/test-qr-ui.mjs",
+    "test:all": "npm test",
     "serve": "python3 -m http.server 4173 --directory dist"
   }
 }

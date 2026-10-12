@@ -207,6 +207,12 @@
   .card-demo { position: absolute; z-index: 2; right: 14px; top: 14px; padding: 5px 9px; color: #59451f; background: #f0dfb6; border-radius: 6px; font-size: 10px; font-weight: 850; letter-spacing: .08em; }
   .photo-unavailable { position: relative; height: 100%; min-height: 220px; }
   .photo-unavailable > span { position: absolute; inset: 55% 20px auto; color: var(--white); font-size: 12px; text-align: center; }
+  .managed-photo { position: relative; width: 100%; height: 100%; min-height: inherit; overflow: hidden; color: var(--white); background: var(--forest-900); }
+  .managed-photo > .tree-placeholder { position: absolute; inset: 0; }
+  .managed-photo > .tree-placeholder svg { width: 60px; transform: translateY(-25px); opacity: .35; }
+  .managed-photo > img { width: 100%; height: 100%; object-fit: cover; }
+  .managed-photo > [data-photo-message] { position: absolute; z-index: 1; inset: 46% 14px auto; color: var(--white); font-size: 11px; line-height: 1.5; text-align: center; }
+  .managed-photo > [data-photo-retry] { position: absolute; z-index: 1; top: 65%; left: 50%; transform: translateX(-50%); min-height: 38px; max-width: calc(100% - 32px); padding: 8px 14px; border: 1px solid rgba(255,255,255,.55); border-radius: 7px; color: var(--white); background: var(--forest-950); font-size: 11px; cursor: pointer; }
   .tree-card-body { padding: 22px; }
   .tree-card-body h3 { margin: 0; color: var(--forest-950); font-family: Georgia, serif; font-size: 25px; font-weight: 500; }
   .scientific-name { margin: 4px 0 18px; color: var(--forest-600); font-family: Georgia, serif; font-size: 14px; font-style: italic; }
@@ -220,6 +226,23 @@
   .empty-state > span { display: block; color: var(--sage-300); font-size: 58px; }
   .empty-state h3 { margin: 10px 0 5px; font-family: Georgia, serif; font-size: 27px; }
   .empty-state p { margin: 0; color: var(--muted); }
+
+  .qr-generator-section { padding: 105px 0; border-top: 1px solid var(--line); background: var(--sage-100); }
+  .qr-generator-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); align-items: start; gap: 80px; }
+  .qr-intro { margin: 24px 0 0; color: #4f6059; font-size: 15px; }
+  .qr-privacy-note { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  .qr-generator-card { min-width: 0; padding: 30px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  #qr-generator-form > .button { width: 100%; margin-top: 20px; }
+  #qr-generate-button:disabled { opacity: .7; cursor: wait; transform: none; }
+  .qr-generator-status { margin: 14px 0 0; color: var(--muted); font-size: 12px; }
+  .qr-generator-result { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); text-align: center; }
+  .qr-generator-image { width: min(100%, 280px); margin-inline: auto; color: #000; background: #fff; }
+  .qr-generator-image svg, .qr-generator-image img { display: block; width: 100%; height: auto; }
+  #qr-target-link { display: block; margin-top: 14px; color: var(--forest-700); font-size: 11px; overflow-wrap: anywhere; }
+  .qr-download-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+  .qr-download-actions .button { min-height: 44px; padding: 10px 17px; font-size: 12px; }
+  .qr-download-svg { color: var(--forest-800); border-color: var(--line); background: var(--sage-100); }
+  .qr-download-help { margin: 16px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 
   .passport-section { min-height: 70vh; padding: 108px 0 120px; background: var(--white); }
   .back-button { margin-bottom: 26px; padding: 0; border: 0; color: var(--forest-700); background: transparent; font-size: 13px; font-weight: 800; cursor: pointer; }
@@ -248,6 +271,8 @@
   .passport-prose h4 { margin: 0 0 8px; color: var(--forest-800); font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
   .passport-prose p { margin: 0; color: #4f6059; white-space: pre-line; }
   .organ-photo img { width: 100%; max-height: 420px; object-fit: contain; border-radius: var(--radius-sm); background: var(--white); }
+  .organ-photo .managed-photo { height: auto; min-height: 240px; max-height: 420px; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); }
+  .organ-photo .managed-photo > img { height: 100%; object-fit: contain; }
   .passport-side { padding-left: 40px; border-left: 1px solid var(--line); }
   .qr-box { padding: 20px; border-radius: var(--radius-md); background: var(--white); text-align: center; }
   .qr-box img { width: 220px; max-width: 100%; margin: 0 auto; }
@@ -257,8 +282,9 @@
   .research-stamp { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
   .research-stamp p { margin: 0 0 14px; color: var(--muted); font-size: 12px; }
   .research-stamp strong { display: block; color: var(--ink); }
-  .passport-actions { display: flex; gap: 10px; margin-top: 24px; }
-  .passport-actions .button { min-height: 42px; padding: 9px 15px; font-size: 11px; }
+  .passport-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .passport-actions .button { min-height: 42px; padding: 9px 15px; border-color: var(--line); color: var(--forest-800); background: var(--white); font-size: 11px; }
+  .passport-actions .button-dark { color: var(--white); background: var(--forest-900); }
   .loading-card { min-height: 300px; display: grid; place-items: center; color: var(--muted); }
 
   .register-section { padding: 120px 0; color: var(--white); background: var(--forest-950); }
@@ -300,6 +326,18 @@
   .field.full { margin-top: 18px; }
   .full-span { grid-column: 1 / -1; }
   .field small { display: block; margin-top: 6px; color: #849089; font-size: 10px; }
+  .photo-upload { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #f8faf5; }
+  .photo-upload .field input[type="file"] { min-width: 0; max-width: 100%; padding: 7px; font-size: 12px; cursor: pointer; }
+  .photo-upload input::file-selector-button { margin-right: 9px; padding: 9px 12px; border: 0; border-radius: 6px; color: var(--white); background: var(--forest-800); font: inherit; font-weight: 700; cursor: pointer; }
+  .photo-upload-help, .photo-upload-note { margin: 8px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+  .photo-upload-note { margin-top: 0; }
+  .photo-upload-preview { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+  .photo-upload-preview > img { width: 112px; height: 94px; object-fit: contain; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  .photo-upload-preview > div { flex: 1 1 150px; min-width: 0; }
+  .photo-file-name { margin: 0 0 8px; color: var(--ink); font-size: 12px; overflow-wrap: anywhere; }
+  .photo-remove { min-height: 40px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; color: var(--forest-800); background: var(--white); font-size: 11px; font-weight: 700; cursor: pointer; }
+  .photo-upload-status { margin: 10px 0 0; color: var(--forest-700); font-size: 11px; }
+  .photo-upload-error { margin: 10px 0 0; padding: 9px 11px; border-left: 3px solid var(--danger); color: #7f3328; background: #f9ece8; font-size: 12px; }
   .input-action { display: flex !important; margin: 0 !important; }
   .input-action input { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
   .input-action button { width: 49px; flex: 0 0 49px; display: grid; place-items: center; border: 1px solid #d8dfda; border-left: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; color: var(--forest-700); background: var(--sage-100); cursor: pointer; }
@@ -344,6 +382,7 @@
     .process-grid { grid-template-columns: 1fr 1fr; }
     .process-grid li::after { display: none; }
     .catalog-grid { grid-template-columns: 1fr 1fr; }
+    .qr-generator-grid { gap: 38px; }
     .register-grid { grid-template-columns: 1fr; gap: 52px; }
     .register-intro { position: static; max-width: 650px; }
     .passport-hero { grid-template-columns: 1fr 1fr; }
@@ -382,7 +421,9 @@
     .stats-row { grid-template-columns: 1fr; gap: 15px; }
     .stats-row > div { justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
     .stats-row span { max-width: none; text-align: right; }
-    .process-section, .catalog-section, .register-section { padding: 80px 0; }
+    .process-section, .catalog-section, .register-section, .qr-generator-section { padding: 80px 0; }
+    .qr-generator-grid { grid-template-columns: 1fr; gap: 30px; }
+    .qr-generator-card { padding: 24px 20px; }
     .section-heading.split { grid-template-columns: 1fr; gap: 18px; }
     .process-grid { grid-template-columns: 1fr; }
     .process-grid li { min-height: 220px; }

@@ -1,6 +1,7 @@
 .DS_Store
 dist/
 dist-pages/
+dist-review/
 .env
 .env.*
 .clasp.json

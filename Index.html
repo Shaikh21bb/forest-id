@@ -38,6 +38,7 @@
           <a href="#home">Басты бет</a>
           <a href="#catalog">Каталог</a>
           <a href="#register">Ағаш тіркеу</a>
+          <a href="#qr-generator">QR-код</a>
           <a class="nav-search" href="#catalog" aria-label="Каталогтан іздеу">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
           </a>
@@ -144,6 +145,35 @@
         </div>
       </section>
 
+      <section class="qr-generator-section" id="qr-generator" aria-labelledby="qr-generator-title">
+        <div class="shell qr-generator-grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Көрсету және бөлісу</p>
+            <h2 id="qr-generator-title">Сайтқа апаратын QR-код</h2>
+            <p class="qr-intro">Комиссияға көрсету, басып шығару немесе бөлісу үшін сайттың QR-кодын жүктеңіз. Жеке ағаш үшін оқытушы жариялаған паспортты таңдаңыз.</p>
+            <p class="qr-privacy-note">QR-код осы браузерде жасалады. Жарияланбаған зерттеулерге ашық QR берілмейді.</p>
+          </div>
+          <div class="qr-generator-card reveal reveal-delay">
+            <form id="qr-generator-form">
+              <label class="field" for="qr-target"><span>QR-код қайда апарады?</span><select id="qr-target" name="qr-target"><option value="site">Сайттың басты беті</option><option value="passport">Жарияланған ағаш паспорты</option></select></label>
+              <label class="field full" id="qr-tree-field" for="qr-tree-id" hidden><span>Ағаштың FOREST ID нөмірі</span><input id="qr-tree-id" name="forestId" maxlength="32" placeholder="FOREST-00002" autocapitalize="characters" spellcheck="false" aria-describedby="qr-tree-help"><small id="qr-tree-help">Каталогтағы жарияланған паспорттың нөмірін енгізіңіз.</small></label>
+              <button class="button button-dark" id="qr-generate-button" type="submit">QR-код жасау</button>
+            </form>
+            <p class="qr-generator-status" id="qr-status" role="status" aria-live="polite">Сайт мекенжайы тексерілуде…</p>
+            <div class="form-error" id="qr-error" role="alert" hidden></div>
+            <div class="qr-generator-result" id="qr-result" hidden>
+              <div class="qr-generator-image" id="qr-image" role="img" aria-label="Таңдалған сілтеменің QR-коды"></div>
+              <a id="qr-target-link" target="_blank" rel="noopener noreferrer">QR ашатын сілтеме</a>
+              <div class="qr-download-actions">
+                <button class="button button-dark" id="qr-download-png" type="button">PNG жүктеу</button>
+                <button class="button qr-download-svg" id="qr-download-svg" type="button">SVG жүктеу</button>
+              </div>
+              <p class="qr-download-help">PNG — телефон мен презентацияға, SVG — сапасын жоғалтпай басып шығаруға. Қағазға шығармас бұрын QR-кодты телефоныңызбен тексеріңіз.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="passport-section" id="passport" aria-labelledby="passport-title" hidden>
         <div class="shell">
           <button class="back-button" id="passport-back" type="button"><span aria-hidden="true">←</span> Каталогқа оралу</button>
@@ -211,8 +241,21 @@
                 <div class="field-grid two">
                   <label class="field"><span>Учаске / орналасуы</span><input name="location" maxlength="240" placeholder="Орталық, сектор, учаске"></label>
                   <label class="field gps-field"><span>GPS координаттары</span><span class="input-action"><input name="gps" maxlength="100" placeholder="43.238949, 76.889709"><button id="locate-button" type="button" title="Ағымдағы орынды анықтау" aria-label="Ағымдағы орынды анықтау"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></span></label>
-                  <label class="field full-span"><span>Ағаштың фотосуреті (HTTPS сілтемесі)</span><input name="photoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Ағаштың жалпы көрінісі бар ашық сурет сілтемесі.</small></label>
-                  <label class="field full-span"><span>Генеративтік мүшенің фотосуреті (HTTPS сілтемесі)</span><input name="organPhotoUrl" type="url" inputmode="url" placeholder="https://..." pattern="https://.*"><small>Гүл, жеміс, тұқым немесе бүр анық көрінетін ашық сурет сілтемесі.</small></label>
+                  <div class="photo-upload full-span" data-photo-field="treePhoto">
+                    <label class="field" for="tree-photo"><span>Ағаштың фотосуреті</span><input id="tree-photo" name="treePhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="tree-photo-help tree-photo-status tree-photo-error"></label>
+                    <p class="photo-upload-help" id="tree-photo-help">Ағаштың жалпы көрінісін таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын ағаш фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
+                    <p class="photo-upload-status" id="tree-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
+                    <p class="photo-upload-error" id="tree-photo-error" data-photo-error role="alert" hidden></p>
+                  </div>
+                  <div class="photo-upload full-span" data-photo-field="organPhoto">
+                    <label class="field" for="organ-photo"><span>Генеративтік мүшенің фотосуреті</span><input id="organ-photo" name="organPhoto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="organ-photo-help organ-photo-status organ-photo-error"></label>
+                    <p class="photo-upload-help" id="organ-photo-help">Гүл, жеміс, тұқым немесе бүр анық көрінетін фото таңдаңыз. JPEG, PNG немесе WebP; 20 МБ дейін. Міндетті емес.</p>
+                    <div class="photo-upload-preview" data-photo-preview-box hidden><img data-photo-preview alt="Жіберуге дайын генеративтік мүше фотосуреті"><div><p class="photo-file-name" data-photo-file-name></p><button class="photo-remove" type="button" data-photo-remove>Фотосуретті алып тастау</button></div></div>
+                    <p class="photo-upload-status" id="organ-photo-status" data-photo-status role="status" aria-live="polite">Файл таңдалмаған.</p>
+                    <p class="photo-upload-error" id="organ-photo-error" data-photo-error role="alert" hidden></p>
+                  </div>
+                  <p class="photo-upload-note full-span">Әр фото жіберу алдында браузерде JPEG форматына ауысып, ең ұзын жағы 1600 пиксельге және көлемі 750 КБ дейін кішірейеді. Файлдағы камера мен GPS метадеректері алынып тасталады; формадағы GPS өрісі бөлек сақталады. Құрылғыдағы түпнұсқа файл өзгермейді.</p>
                 </div>
                 <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
               </fieldset>
@@ -252,6 +295,7 @@
       window.__APP_VERSION__ = <?!= appVersion ?>;
     </script>
     <?!= include_('QRCode'); ?>
+    <?!= include_('PhotoUpload'); ?>
     <?!= include_('JavaScript'); ?>
   </body>
 </html>

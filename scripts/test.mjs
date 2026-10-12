@@ -81,6 +81,7 @@ function makeServer(initialSheets = []) {
   const sheets = new Map(initialSheets.map((sheet) => [sheet.name, sheet]));
   const properties = new Map();
   const menuTargets = [];
+  const driveFiles = new Map();
   let locked = false;
   const spreadsheet = {
     getId: () => 'PRIVATE-SPREADSHEET-ID',
@@ -110,6 +111,14 @@ function makeServer(initialSheets = []) {
       releaseLock() { assert.equal(locked, true, 'lock must be held'); locked = false; },
     }) },
     ScriptApp: { getService: () => ({ getUrl: () => 'https://script.google.com/macros/s/TEST/exec' }) },
+    Drive: { Files: {
+      generateIds: () => ({ ids: ['APP_CREATED_FOLDER_ID'] }),
+      get(id) { if (!driveFiles.has(id)) throw new Error('File not found: ' + id); return driveFiles.get(id); },
+      create(metadata) {
+        const file = { ...metadata, ownedByMe: true, permissions: [{ type: 'user', role: 'owner' }] };
+        driveFiles.set(metadata.id, file); return file;
+      },
+    } },
     Utilities: {
       DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' },
       computeDigest(algorithm, text, charset) { return [...createHash(algorithm).update(text, charset).digest()]; },
@@ -140,7 +149,7 @@ const payload = {
 
 check('only intended public web entrypoints are exposed', () => {
   const names = [...code.matchAll(/^function (\w+)\(/gm)].map((match) => match[1]).filter((name) => !name.endsWith('_'));
-  assert.deepEqual(names.sort(), ['doGet', 'doPost', 'getBootstrapData', 'getCatalog', 'getTreePassport', 'onOpen', 'submitTree'].sort());
+  assert.deepEqual(names.sort(), ['doGet', 'doPost', 'getBootstrapData', 'getCatalog', 'getTreePassport', 'getTreePhoto', 'onOpen', 'submitTree'].sort());
 });
 check('setup creates schema, private menu targets, and is idempotent', () => {
   const result = api.setupForestId_();
@@ -277,7 +286,7 @@ check('legacy migration appends columns and preserves all existing cells/setting
   migrated.context.setupForestId_();
   assert.deepEqual(legacy.rows[1], legacyRow);
   assert.deepEqual(legacy.rows[0].slice(0, 23), headers);
-  assert.equal(legacy.rows[0].length, 32);
+  assert.equal(legacy.rows[0].length, 34);
   assert.deepEqual(settings.rows[1], ['CUSTOM_NOTE', 'keep in place']);
   assert.deepEqual(settings.rows[2], ['ORGANIZATION', 'My university']);
   assert.equal(migrated.context.getBootstrapData().config.organization, 'My university');

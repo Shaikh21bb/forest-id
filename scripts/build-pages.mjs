@@ -25,10 +25,11 @@ export function validateRuntime({ apiUrl, siteUrl }) {
 
 export async function buildPages({ apiUrl, siteUrl, outDir = resolve(projectRoot, 'dist-pages') }) {
   const runtime = validateRuntime({ apiUrl, siteUrl });
-  const [index, styles, qrcode, javascript, packageJson] = await Promise.all([
+  const [index, styles, qrcode, photoUpload, javascript, packageJson] = await Promise.all([
     readFile(resolve(projectRoot, 'Index.html'), 'utf8'),
     readFile(resolve(projectRoot, 'Styles.html'), 'utf8'),
     readFile(resolve(projectRoot, 'QRCode.html'), 'utf8'),
+    readFile(resolve(projectRoot, 'PhotoUpload.html'), 'utf8'),
     readFile(resolve(projectRoot, 'JavaScript.html'), 'utf8'),
     readFile(resolve(projectRoot, 'package.json'), 'utf8'),
   ]);
@@ -37,6 +38,7 @@ export async function buildPages({ apiUrl, siteUrl, outDir = resolve(projectRoot
   const output = index
     .replace("<?!= include_('Styles'); ?>", () => styles)
     .replace("<?!= include_('QRCode'); ?>", () => qrcode)
+    .replace("<?!= include_('PhotoUpload'); ?>", () => photoUpload)
     .replace("<?!= include_('JavaScript'); ?>", () => bootstrap + javascript)
     .replace('<?!= initialTreeId ?>', JSON.stringify(''))
     .replace('<?!= appVersion ?>', JSON.stringify(version));
