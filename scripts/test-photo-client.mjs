@@ -7,6 +7,7 @@ import { test } from 'node:test';
 import vm from 'node:vm';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const formMarkup = (await readFile(resolve(root, 'Index.html'), 'utf8')).match(/<form\b[^>]*id="tree-form"[^>]*>([\s\S]*?)<\/form>/)?.[1];
 const runtime = {
   mode: 'production',
   apiUrl: 'https://script.google.com/macros/s/test_DEPLOYMENT-123/exec',
@@ -148,6 +149,62 @@ function delayedPhotos(options = {}) {
   return { ...c, pending };
 }
 
+function studentFormControls() {
+  assert.ok(formMarkup, 'The student form must exist');
+  const controls = [];
+  let step = null;
+  let detailsDepth = 0;
+  for (const match of formMarkup.matchAll(/<\/?(?:fieldset|details)\b[^>]*>|<(?:input|select|textarea)\b[^>]*>/g)) {
+    const tag = match[0];
+    if (tag.startsWith('</fieldset')) step = null;
+    else if (tag.startsWith('<fieldset')) step = tag.match(/data-form-step="(\d+)"/)?.[1];
+    else if (tag.startsWith('</details')) detailsDepth -= 1;
+    else if (tag.startsWith('<details')) detailsDepth += 1;
+    else {
+      const attributes = Object.fromEntries([...tag.matchAll(/([\w-]+)(?:="([^"]*)")?/g)].map((attribute) => [attribute[1], attribute[2] ?? '']));
+      controls.push({ attributes, step, detailsDepth });
+    }
+  }
+  return controls;
+}
+
+test('measurement fields are discoverable in step two with their original units and numeric limits', () => {
+  const controls = studentFormControls();
+  const measurements = {
+    treeWidthMm: { unit: 'мм', max: '100000', step: '0.1' },
+    heightM: { unit: 'м', max: '150', step: '0.01' },
+    dbhCm: { unit: 'см', max: '1500', step: '0.1' },
+    organLengthMm: { unit: 'мм', max: '100000', step: '0.1' },
+    organWidthMm: { unit: 'мм', max: '100000', step: '0.1' },
+  };
+  for (const [name, expected] of Object.entries(measurements)) {
+    const control = controls.find(({ attributes }) => attributes.name === name);
+    assert.ok(control, `${name} must remain in the student form`);
+    assert.equal(control.step, '1', `${name} belongs to the measurements step`);
+    assert.equal(control.detailsDepth, 0, `${name} must not be hidden in a disclosure`);
+    for (const [attribute, value] of Object.entries({ type: 'number', min: '0', max: expected.max, step: expected.step, inputmode: 'decimal' })) {
+      assert.equal(control.attributes[attribute], value, `${name}: ${attribute}`);
+    }
+    const label = [...formMarkup.matchAll(/<label\b[^>]*>([\s\S]*?)<\/label>/g)].find((match) => match[1].includes(`name="${name}"`))?.[1];
+    assert.match(label ?? '', new RegExp(`, ${expected.unit}</span>`), `${name} must display its measurement unit`);
+  }
+});
+
+test('all research fields remain available across three steps without making optional fields mandatory', () => {
+  const controls = studentFormControls();
+  const fieldsByStep = [
+    ['researcher', 'academicGroup', 'kzName', 'scientificName', 'family', 'plantGroup'],
+    ['generativeStructure', 'morphology', 'dispersal', 'treeWidthMm', 'heightM', 'dbhCm', 'studyDate', 'organLengthMm', 'organWidthMm', 'fruitType', 'phenology', 'organShapeColor', 'seedDetails', 'conclusion'],
+    ['treePhoto', 'organPhoto', 'location', 'gps', 'website'],
+  ];
+  assert.deepEqual([...formMarkup.matchAll(/<fieldset\b[^>]*data-form-step="(\d+)"/g)].map((match) => match[1]), ['0', '1', '2']);
+  fieldsByStep.forEach((names, index) => {
+    assert.deepEqual(controls.filter((control) => control.step === String(index)).map((control) => control.attributes.name).sort(), [...names].sort());
+  });
+  for (const control of controls) assert.equal(control.detailsDepth, 0, `${control.attributes.name} must not need a disclosure to be found`);
+  assert.deepEqual(controls.filter(({ attributes }) => Object.hasOwn(attributes, 'required')).map(({ attributes }) => attributes.name).sort(), ['researcher', 'kzName', 'scientificName', 'generativeStructure', 'morphology'].sort());
+});
+
 test('form binds the file helper and keeps file preparation separate from text fields', () => {
   const c = client();
   let bound;
@@ -210,6 +267,29 @@ test('actual submission sends prepared JPEG files, never raw File objects, with 
   assert.equal(c.state.submitting, false);
   assert.equal(c.sessionStorage.data.size, 0);
   assert.equal(c.localStorage.data.size, 0);
+});
+
+test('submission preserves zero and decimal measurements alongside optional descriptions and date', async () => {
+  const c = client();
+  const fields = {
+    treeWidthMm: '0',
+    heightM: '12.50',
+    dbhCm: '24.1',
+    organLengthMm: '8.2',
+    organWidthMm: '3.1',
+    organShapeColor: 'Ұзынша, жасыл',
+    conclusion: 'Өлшемдер далалық зерттеу кезінде жазылды.',
+    studyDate: '2026-10-12',
+  };
+  c.form.entries.push(...Object.entries(fields));
+  await c.submitForm({ preventDefault() {} });
+  assert.equal(c.calls.length, 1);
+  assert.equal(c.calls[0].init.method, 'POST');
+  const argument = JSON.parse(c.calls[0].init.body).argument;
+  for (const [name, value] of Object.entries(fields)) assert.equal(argument[name], value, `${name} must reach the API without being dropped or converted`);
+  assert.equal(c.ids['success-id'].textContent, 'FOREST-00004');
+  assert.equal(c.form.hidden, true);
+  assert.equal(c.state.submitting, false);
 });
 
 test('failed file submission retains identical request ID and only a SHA-256 fingerprint in session storage', async () => {
